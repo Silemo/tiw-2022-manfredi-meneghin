@@ -1,11 +1,13 @@
 package it.polimi.tiw.projects.beans;
 
+import java.math.BigDecimal;
+
 public class Account {
 	private int code;
 	private String username;
-	private int balance;
+	private BigDecimal balance;
 	
-	public Account(int code, String username, int balance) { 
+	public Account(int code, String username, BigDecimal balance) { 
 		this.code = code;
 		this.username = username;
 		this.balance = balance;
@@ -39,11 +41,11 @@ public class Account {
 	 * Getter for the field 'balance'
 	 * @return the account's balance 
 	 */
-	public int getBalance() { return balance; }
+	public BigDecimal getBalance() { return balance; }
 	
 	/*
 	 * Setter for the field 'balance'
 	 * @param balance the balance to be set
 	 */
-	public void setBalance(int balance) { this.balance = balance; }
+	public void setBalance(BigDecimal balance) { this.balance = balance; }
 }
