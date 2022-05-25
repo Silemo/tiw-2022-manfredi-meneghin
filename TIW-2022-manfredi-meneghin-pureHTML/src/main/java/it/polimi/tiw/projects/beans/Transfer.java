@@ -1,14 +1,16 @@
 package it.polimi.tiw.projects.beans;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class Transfer {
+	
 	private int id;
-	private Date date;
-	private int amount;
+	private Date timestamp;
+	private BigDecimal amount;
 	private String reason;
-	private String orderer;
-	private String beneficiary;
+	private int id_account_orderer;
+	private int id_account_beneficiary;
 	
 	/*
 	 * Getter for the field 'id'
@@ -26,25 +28,25 @@ public class Transfer {
 	 * Getter for the field 'date'
 	 * @return the transfer's date 
 	 */
-	public Date getDate() { return date; }
+	public Date getDate() { return timestamp; }
 	
 	/*
 	 * Setter for the field 'date'
 	 * @param date the date to be set
 	 */
-	public void setDate(Date date) { this.date = date; }
+	public void setDate(Date timestamp) { this.timestamp = timestamp; }
 	
 	/*
 	 * Getter for the field 'amount'
 	 * @return the transfer's amount
 	 */
-	public int getAmount() { return amount; }
+	public BigDecimal getAmount() { return amount; }
 	
 	/*
 	 * Setter for the field 'amount'
 	 * @param amount the amount to be set
 	 */
-	public void setAmount(int amount) { this.amount = amount; }
+	public void setAmount(BigDecimal amount) { this.amount = amount; }
 	
 	/*
 	 * Getter for the field 'reason'
@@ -59,26 +61,26 @@ public class Transfer {
 	public void setReason(String reason) { this.reason = reason; }
 	
 	/*
-	 * Getter for the field 'orderer'
-	 * @return the transfer's orderer
+	 * Getter for the field 'id_account_orderer'
+	 * @return the transfer's id_account_orderer
 	 */
-	public String getOrderer() { return orderer; }
+	public int getIdAccountOrderer() { return id_account_orderer; }
 	
 	/*
-	 * Setter for the field 'orderer'
-	 * @param orderer the orderer to be set
+	 * Setter for the field 'id_account_orderer'
+	 * @param id_account_orderer the id_account_orderer to be set
 	 */
-	public void setOrderer(String orderer) { this.orderer = orderer; }
+	public void setIdAccountOrderer(int id_account_orderer) { this.id_account_orderer = id_account_orderer; }
 	
 	/*
-	 * Getter for the field 'beneficiary'
-	 * @return the transfer's beneficiary
+	 * Getter for the field 'id_account_beneficiary'
+	 * @return the transfer's id_account_beneficiary
 	 */
-	public String getBeneficiary() { return beneficiary; }
+	public int getIdAccountBeneficiary() { return id_account_beneficiary; }
 	
 	/*
-	 * Setter for the field 'beneficiary'
-	 * @param beneficiary the beneficiary to be set
+	 * Setter for the field 'id_account_beneficiary'
+	 * @param id_account_beneficiary the id_account_beneficiary to be set
 	 */
-	public void setBeneficiary(String beneficiary) { this.beneficiary = beneficiary; }
+	public void setIdAccountBeneficiary(int id_account_beneficiary) { this.id_account_beneficiary = id_account_beneficiary; }
 }

@@ -3,15 +3,30 @@ package it.polimi.tiw.projects.beans;
 import java.math.BigDecimal;
 
 public class Account {
+	
+	private int id;
 	private int code;
-	private String username;
+	private int user_id;
 	private BigDecimal balance;
 	
-	public Account(int code, String username, BigDecimal balance) { 
+	public Account(int id, int code, int user_id, BigDecimal balance) { 
+		this.id = id;
 		this.code = code;
-		this.username = username;
+		this.user_id = user_id;
 		this.balance = balance;
 	}
+	
+	/*
+	 * Getter for the field 'id'
+	 * @return the account's id 
+	 */
+	public int getId() { return id; }
+	
+	/*
+	 * Setter for the field 'id'
+	 * @param id the id to be set
+	 */
+	public void setId(int id) { this.id = id; }
 	
 	/*
 	 * Getter for the field 'code'
@@ -26,16 +41,16 @@ public class Account {
 	public void setCode(int code) { this.code = code; }
 	
 	/*
-	 * Getter for the field 'username'
-	 * @return the user's username
+	 * Getter for the field 'user_id'
+	 * @return the account's user_id 
 	 */
-	public String getUsername() { return username; }
+	public int getUserId() { return user_id; }
 	
 	/*
-	 * Setter for the field 'username'
-	 * @param username the username to be set
+	 * Setter for the field 'user_id'
+	 * @param user_id the user_id to be set
 	 */
-	public void setUsername(String username) { this.username = username; }
+	public void setUserId(int user_id) { this.user_id = user_id; }
 	
 	/*
 	 * Getter for the field 'balance'

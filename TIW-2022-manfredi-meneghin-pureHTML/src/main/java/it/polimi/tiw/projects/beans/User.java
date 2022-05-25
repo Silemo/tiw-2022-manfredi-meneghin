@@ -1,17 +1,34 @@
 package it.polimi.tiw.projects.beans;
 
 public class User {
+	
+	private int id;
 	private String name;
 	private String surname;
+	private String email;
 	private String username;
 	private String password;
 	
-	public User(String name, String surname, String username, String password) {
+	public User(int id, String name, String surname, String email, String username, String password) {
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
+		this.email = email;
 		this.username = username;
 		this.password = password;
 	}
+	
+	/*
+	 * Getter for the field 'id'
+	 * @return the user's id
+	 */
+	public int getId() { return id; }
+
+	/*
+	 * Getter for the field 'id'
+	 * @return the user's id
+	 */
+	public void setId(int id) { this.id = id; }
 	
 	/*
 	 * Getter for the field 'name'
@@ -36,6 +53,18 @@ public class User {
 	 * @param surname the surname to be set
 	 */
 	public void setSurname(String surname) { this.surname = surname; }
+	
+	/*
+	 * Getter for the field 'email'
+	 * @return the user's email
+	 */
+	public String getEmail() { return email; }
+	
+	/*
+	 * Setter for the field 'email'
+	 * @param email the email to be set
+	 */
+	public void setEmail(String email) { this.email = email; }
 	
 	/*
 	 * Getter for the field 'username'
