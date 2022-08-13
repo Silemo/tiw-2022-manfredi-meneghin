@@ -1,8 +1,9 @@
-CREATE DATABASE  IF NOT EXISTS `db_project` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db_project`;
+DROP DATABASE IF EXISTS `bankDB`;
+CREATE DATABASE  IF NOT EXISTS `bankDB` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bankDB`;
 -- MySQL dump 10.13  Distrib 8.0.28, for macos11 (x86_64)
 --
--- Host: 127.0.0.1    Database: db_project
+-- Host: 127.0.0.1    Database: bankDB
 -- ------------------------------------------------------
 -- Server version	8.0.28
 
@@ -25,14 +26,12 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `account` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `code` int unsigned NOT NULL,
+  `code` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
-  `balance` decimal(15,2) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code_UNIQUE` (`code`),
-  KEY `id_user_idx` (`user_id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE
+  `balance` decimal(15,2) unsigned NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`code`),
+  CONSTRAINT `account_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+  CONSTRAINT `account_balance_ck` CHECK (`balance` >= 0)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,7 +41,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,12345,1,1000.05),(2,54321,2,2000.99),(3,35678,3,1000000.85),(4,54789,3,2000000.95),(5,35710,1,285.60);
+INSERT INTO `account` VALUES (1,1,1000.05),(2,2,2000.99),(3,3,1000000.85),(4,3,2000000.95),(5,1,285.60);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,16 +54,15 @@ DROP TABLE IF EXISTS `transfer`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transfer` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp,
+  `code_account_orderer` int unsigned NOT NULL,
+  `code_account_beneficiary` int unsigned NOT NULL,
   `amount` decimal(15,2) unsigned NOT NULL,
   `reason` varchar(255) NOT NULL,
-  `id_account_orderer` int unsigned NOT NULL,
-  `id_account_beneficiary` int unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_account_orderer_idx` (`id_account_orderer`),
-  KEY `id_account_beneficiary_idx` (`id_account_beneficiary`),
-  CONSTRAINT `id_account_beneficiary` FOREIGN KEY (`id_account_beneficiary`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `id_account_orderer` FOREIGN KEY (`id_account_orderer`) REFERENCES `account` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `transfer_code_account_beneficiary_fk` FOREIGN KEY (`code_account_beneficiary`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
+  CONSTRAINT `transfer_code_account_orderer_fk` FOREIGN KEY (`code_account_orderer`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
+  CONSTRAINT `transfer_amount_ck` CHECK (`amount` > 0)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,7 +72,7 @@ CREATE TABLE `transfer` (
 
 LOCK TABLES `transfer` WRITE;
 /*!40000 ALTER TABLE `transfer` DISABLE KEYS */;
-INSERT INTO `transfer` VALUES (1,'2022-03-03 00:05:55',1000.00,'project financement',3,1),(2,'2022-04-05 10:35:01',500.00,'cash',5,2);
+INSERT INTO `transfer` VALUES (1,'2022-03-03 00:05:55',1000.00,'project funding',3,1),(2,'2022-04-05 10:35:01',500.00,'cash',5,2);
 /*!40000 ALTER TABLE `transfer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +91,8 @@ CREATE TABLE `user` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
+  CONSTRAINT `user_username_un` UNIQUE (`username`),
+  CONSTRAINT `user_email_un` UNIQUE (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -116,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-25 11:03:51
+-- Dump completed on 2022-08-11 18:49:07
