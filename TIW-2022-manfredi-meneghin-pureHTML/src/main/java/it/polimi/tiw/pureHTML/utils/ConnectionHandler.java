@@ -1,4 +1,4 @@
-package it.polimi.tiw.projects.utils;
+package it.polimi.tiw.pureHTML.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,9 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.UnavailableException;
-
+/**
+ * Handler of the connection to the mySQL database
+ */
 public class ConnectionHandler {
 
 	public static Connection getConnection(ServletContext context) throws UnavailableException {
