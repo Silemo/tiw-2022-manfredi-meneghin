@@ -1,33 +1,16 @@
-package it.polimi.tiw.projects.beans;
+package it.polimi.tiw.pureHTML.beans;
 
 import java.math.BigDecimal;
 
+/**
+ * Java bean for the Account information
+ */
 public class Account {
 	
-	private int id;
-	private int code;
-	private int user_id;
+	private int        code;
+	private int        user_id;
 	private BigDecimal balance;
-	
-	public Account(int id, int code, int user_id, BigDecimal balance) { 
-		this.id = id;
-		this.code = code;
-		this.user_id = user_id;
-		this.balance = balance;
-	}
-	
-	/*
-	 * Getter for the field 'id'
-	 * @return the account's id 
-	 */
-	public int getId() { return id; }
-	
-	/*
-	 * Setter for the field 'id'
-	 * @param id the id to be set
-	 */
-	public void setId(int id) { this.id = id; }
-	
+
 	/*
 	 * Getter for the field 'code'
 	 * @return the account's code 
