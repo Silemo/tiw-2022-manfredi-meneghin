@@ -15,6 +15,7 @@ public class UserDAO {
 	private Connection connection;
 
 	public UserDAO(Connection connection) {
+		
 		this.connection = connection;
 	}
 	
@@ -65,7 +66,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -75,7 +75,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-			
 			}
 		}
 		
@@ -112,7 +111,6 @@ public class UserDAO {
 				user.setSurname(resultSet.getString("surname"));
 				user.setEmail(resultSet.getString("email"));
 				user.setUsername(resultSet.getString("username"));
-				
 			}
 			
 		} catch(SQLException e) {
@@ -128,7 +126,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -138,7 +135,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 		
@@ -190,7 +186,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -200,7 +195,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 		
@@ -247,7 +241,6 @@ public class UserDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-			
 			}
 		}
 	}

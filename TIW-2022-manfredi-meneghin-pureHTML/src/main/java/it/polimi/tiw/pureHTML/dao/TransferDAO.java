@@ -19,6 +19,7 @@ public class TransferDAO {
 	private Connection connection;
 
 	public TransferDAO(Connection connection) {
+		
 		this.connection = connection;
 	}
 	
@@ -55,7 +56,6 @@ public class TransferDAO {
 				transfer.setAmount(resultSet.getBigDecimal("amount"));
 				transfer.setReason(resultSet.getString("reason"));
 				transfers.add(transfer);
-				
 			}
 			
 		} catch(SQLException e) {
@@ -71,7 +71,6 @@ public class TransferDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -81,7 +80,6 @@ public class TransferDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 		
@@ -156,7 +154,6 @@ public class TransferDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 	}

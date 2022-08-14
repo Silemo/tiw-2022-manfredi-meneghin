@@ -17,6 +17,7 @@ public class AccountDAO {
 	private Connection connection;
 
 	public AccountDAO(Connection connection) {
+		
 		this.connection = connection;
 	}
 	
@@ -48,7 +49,6 @@ public class AccountDAO {
 				account.setCode(resultSet.getInt("code"));
 				account.setUserId(resultSet.getInt("user_id"));
 				account.setBalance(resultSet.getBigDecimal("balance"));
-				
 			}
 			
 		} catch(SQLException e) {
@@ -64,7 +64,6 @@ public class AccountDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -74,7 +73,6 @@ public class AccountDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 		
@@ -126,7 +124,6 @@ public class AccountDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the result set when" + performedAction);
-				
 			}
 			
 			try {
@@ -136,7 +133,6 @@ public class AccountDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 		
@@ -175,7 +171,6 @@ public class AccountDAO {
 			} catch (Exception e) {
 				
 				throw new SQLException("Error closing the statement when" + performedAction);
-				
 			}
 		}
 	}

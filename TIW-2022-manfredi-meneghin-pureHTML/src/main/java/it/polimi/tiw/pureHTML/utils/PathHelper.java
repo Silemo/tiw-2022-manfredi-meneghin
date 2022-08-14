@@ -18,8 +18,7 @@ public class PathHelper {
     public static String pathToTransferFailedPage    = "/WEB-INF/transferFailed.html";
     public static String pathToTransferConfirmedPage = "/WEB-INF/transferConfirmed.html";
     
-    /*
+    
     public static String goToHomeServletPath              = "/GoToHome";
     public static String goToTransferConfirmedServletPath = "/GoToTransferConfirmedPage";
-    */
 }
