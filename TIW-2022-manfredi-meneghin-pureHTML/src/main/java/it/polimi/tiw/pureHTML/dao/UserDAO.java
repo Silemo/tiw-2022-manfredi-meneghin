@@ -89,7 +89,7 @@ public class UserDAO {
 	 * @return the User
 	 * @throws SQLException
 	 */
-	public User getUserById(int id) throws SQLException{
+	public User findUserById(int id) throws SQLException{
 
 		User user = null;
 		String performedAction = " finding a user by id";
@@ -161,6 +161,66 @@ public class UserDAO {
 			
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, email);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				
+				user = new User();
+				user.setId(resultSet.getInt("id"));
+				user.setName(resultSet.getString("name"));
+				user.setSurname(resultSet.getString("surname"));
+				user.setEmail(resultSet.getString("email"));
+				user.setUsername(resultSet.getString("username"));
+			}
+			
+		} catch(SQLException e) {
+			
+			throw new SQLException("Error accessing the DB when" + performedAction);
+			
+		} finally {
+			
+			try {
+				
+				resultSet.close();
+				
+			} catch (Exception e) {
+				
+				throw new SQLException("Error closing the result set when" + performedAction);
+			}
+			
+			try {
+				
+				preparedStatement.close();
+				
+			} catch (Exception e) {
+				
+				throw new SQLException("Error closing the statement when" + performedAction);
+			}
+		}
+		
+		return user;
+	}
+	
+	/**
+	 * Finds and returns a User from the bankDB taking their username as input
+	 * In case of error raises an SQLException
+	 * 
+	 * @param username the user's username (UNIQUE)
+	 * @return the User
+	 * @throws SQLException
+	 */
+	public User findUserByUsername(String username) throws SQLException{
+
+		User user = null;
+		String performedAction = " finding a user by username";
+		String query = "SELECT * FROM bankDB.user WHERE username = ?";
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, username);
 			resultSet = preparedStatement.executeQuery();
 			
 			while(resultSet.next()) {
