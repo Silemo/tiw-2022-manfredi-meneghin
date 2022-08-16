@@ -55,13 +55,13 @@ DROP TABLE IF EXISTS `transfer`;
 CREATE TABLE `transfer` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp,
-  `code_account_orderer` int unsigned NOT NULL,
-  `code_account_beneficiary` int unsigned NOT NULL,
+  `account_code_orderer` int unsigned NOT NULL,
+  `account_code_beneficiary` int unsigned NOT NULL,
   `amount` decimal(15,2) unsigned NOT NULL,
   `reason` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `transfer_code_account_beneficiary_fk` FOREIGN KEY (`code_account_beneficiary`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
-  CONSTRAINT `transfer_code_account_orderer_fk` FOREIGN KEY (`code_account_orderer`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
+  CONSTRAINT `transfer_account_code_beneficiary_fk` FOREIGN KEY (`account_code_beneficiary`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
+  CONSTRAINT `transfer_account_code_orderer_fk` FOREIGN KEY (`account_code_orderer`) REFERENCES `account` (`code`) ON UPDATE CASCADE ON DELETE NO ACTION,
   CONSTRAINT `transfer_amount_ck` CHECK (`amount` > 0)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

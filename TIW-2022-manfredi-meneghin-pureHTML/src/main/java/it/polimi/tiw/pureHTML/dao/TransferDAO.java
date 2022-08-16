@@ -36,7 +36,7 @@ public class TransferDAO {
 
 		List<Transfer> transfers = new ArrayList<>();
 		String performedAction = " finding transfers by account code";
-		String query = "SELECT * FROM bankDB.transfer WHERE code_account_orderer = ? OR code_account_beneficiary = ? ORDER BY timestamp DESC";
+		String query = "SELECT * FROM bankDB.transfer WHERE account_code_orderer = ? OR account_code_beneficiary = ? ORDER BY timestamp DESC";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		
@@ -50,8 +50,8 @@ public class TransferDAO {
 			while(resultSet.next()) {
 				
 				Transfer transfer = new Transfer();
-				transfer.setCodeAccountOrderer(resultSet.getInt("code_account_orderer"));
-				transfer.setCodeAccountBeneficiary(resultSet.getInt("code_account_beneficiary"));
+				transfer.setAccountCodeOrderer(resultSet.getInt("account_code_orderer"));
+				transfer.setAccountCodeBeneficiary(resultSet.getInt("account_code_beneficiary"));
 				transfer.setTimestamp(new Date(resultSet.getTimestamp("timestamp").getTime()));
 				transfer.setAmount(resultSet.getBigDecimal("amount"));
 				transfer.setReason(resultSet.getString("reason"));
@@ -90,16 +90,16 @@ public class TransferDAO {
 	 * Creates a new Transfer in the bank database - TRANSACTION BASED OPERATION
 	 * In case of error raises an SQLException
 	 * 
-	 * @param code_account_orderer the account from where the transfer starts
-	 * @param code_account_beneficiary the account which receives the transfer
+	 * @param account_code_orderer the account from where the transfer starts
+	 * @param account_code_beneficiary the account which receives the transfer
 	 * @param amount the quantity of money being exchanged
 	 * @param reason a small description of the transfer reason
 	 * @throws SQLException
 	 */
-	public void createTransfer(int code_account_orderer, int code_account_beneficiary, BigDecimal amount, String reason) throws SQLException{
+	public void createTransfer(int account_code_orderer, int account_code_beneficiary, BigDecimal amount, String reason) throws SQLException{
 
 		String performedAction = " creating a new transfer";
-		String transactionInsert       = "INSERT INTO bankDB.transfer (code_account_orderer, code_account_beneficiary, amount, reason) VALUES(?,?,?,?)";
+		String transactionInsert       = "INSERT INTO bankDB.transfer (account_code_orderer, account_code_beneficiary, amount, reason) VALUES(?,?,?,?)";
 		String transactionUpdateSource = "UPDATE bankDB.account SET balance = balance - ? WHERE code = ?";
 		String transactionUpdateDest   = "UPDATE bankDB.account SET balance = balance + ? WHERE code = ?";
 		
@@ -116,20 +116,20 @@ public class TransferDAO {
 			preparedStatementUpdateDest   = connection.prepareStatement(transactionUpdateDest);
 			
 			// First operation - Creating the transfer in bankDB.transfer table
-			preparedStatementInsert.setInt(1, code_account_orderer);
-			preparedStatementInsert.setInt(2, code_account_beneficiary);
+			preparedStatementInsert.setInt(1, account_code_orderer);
+			preparedStatementInsert.setInt(2, account_code_beneficiary);
 			preparedStatementInsert.setBigDecimal(3, amount);
 			preparedStatementInsert.setString(4, reason);
 			preparedStatementInsert.executeUpdate();
 			
 			// Second operation - Removing the amount from the orderer's account
 			preparedStatementUpdateSource.setBigDecimal(1, amount);
-			preparedStatementUpdateSource.setInt(2, code_account_orderer);
+			preparedStatementUpdateSource.setInt(2, account_code_orderer);
 			preparedStatementUpdateSource.executeUpdate();
 			
 			// Third and last operation - Adding the amount to the beneficiary's account
 			preparedStatementUpdateDest.setBigDecimal(1, amount);
-			preparedStatementUpdateDest.setInt(2, code_account_orderer);
+			preparedStatementUpdateDest.setInt(2, account_code_orderer);
 			preparedStatementUpdateDest.executeUpdate();
 			
 			// Commit the whole transaction

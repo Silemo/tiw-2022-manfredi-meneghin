@@ -10,8 +10,8 @@ public class Transfer {
 	
 	private int        id;
 	private Date       timestamp;
-	private int        code_account_orderer;
-	private int        code_account_beneficiary;
+	private int        account_code_orderer;
+	private int        account_code_beneficiary;
 	private BigDecimal amount;
 	private String     reason;
 	
@@ -40,28 +40,28 @@ public class Transfer {
 	public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 	
 	/*
-	 * Getter for the field 'code_account_orderer'
-	 * @return the transfer's code_account_orderer
+	 * Getter for the field 'account_code_orderer'
+	 * @return the transfer's account_code_orderer
 	 */
-	public int getCodeAccountOrderer() { return code_account_orderer; }
+	public int getAccountCodeOrderer() { return account_code_orderer; }
 	
 	/*
-	 * Setter for the field 'code_account_orderer'
-	 * @param code_account_orderer the code_account_orderer to be set
+	 * Setter for the field 'account_code_orderer'
+	 * @param code_account_orderer the account_code_orderer to be set
 	 */
-	public void setCodeAccountOrderer(int code_account_orderer) { this.code_account_orderer = code_account_orderer; }
+	public void setAccountCodeOrderer(int account_code_orderer) { this.account_code_orderer = account_code_orderer; }
 	
 	/*
-	 * Getter for the field 'code_account_beneficiary'
-	 * @return the transfer's code_account_beneficiary
+	 * Getter for the field 'account_code_beneficiary'
+	 * @return the transfer's account_code_beneficiary
 	 */
-	public int getCodeAccountBeneficiary() { return code_account_beneficiary; }
+	public int getAccountCodeBeneficiary() { return account_code_beneficiary; }
 	
 	/*
-	 * Setter for the field 'code_account_beneficiary'
-	 * @param code_account_beneficiary the code_account_beneficiary to be set
+	 * Setter for the field 'account_code_beneficiary'
+	 * @param code_account_beneficiary the account_code_beneficiary to be set
 	 */
-	public void setCodeAccountBeneficiary(int code_account_beneficiary) { this.code_account_beneficiary = code_account_beneficiary; }
+	public void setAccountCodeBeneficiary(int account_code_beneficiary) { this.account_code_beneficiary = account_code_beneficiary; }
 	
 	/*
 	 * Getter for the field 'amount'
