@@ -1,5 +1,6 @@
 package it.polimi.tiw.pureHTML.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -167,6 +168,44 @@ public class AccountDAO {
 			try {
 				
 				preparedStatementAddUser.close();
+				
+			} catch (Exception e) {
+				
+				throw new SQLException("Error closing the statement when" + performedAction);
+			}
+		}
+	}
+	
+	/**
+	 * Creates a new Account in the bank database with a specified balance
+	 * In case of error raises an SQLException
+	 * 
+	 * @param user_id the id of the account owner (user)
+	 * @param balance the balance to set the account at
+	 * @throws SQLException
+	 */
+	public void createAccount(int user_id, BigDecimal balance) throws SQLException {
+		
+		String performedAction = " creating a new bank account in the database";
+		String queryAddAccount = "INSERT INTO bankDB.account (user_id, balance) VALUES(?,?)";
+		PreparedStatement preparedStatementAddAccount = null;	
+		
+		try {
+			
+			preparedStatementAddAccount= connection.prepareStatement(queryAddAccount);
+			preparedStatementAddAccount.setInt(1, user_id);
+			preparedStatementAddAccount.setBigDecimal(2, balance);
+			preparedStatementAddAccount.executeUpdate();
+			
+		} catch(SQLException e) {
+			
+			throw new SQLException("Error accessing the DB when" + performedAction);
+			
+		} finally {
+			
+			try {
+				
+				preparedStatementAddAccount.close();
 				
 			} catch (Exception e) {
 				
