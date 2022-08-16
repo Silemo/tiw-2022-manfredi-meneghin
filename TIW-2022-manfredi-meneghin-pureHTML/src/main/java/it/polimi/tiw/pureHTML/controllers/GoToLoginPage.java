@@ -55,6 +55,15 @@ public class GoToLoginPage extends HttpServlet {
 		doGet(request, response);
 	}
 	
+	/**
+	 * Forwards to the specified path
+	 * 
+	 * @param request
+	 * @param response
+	 * @param path
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
 		
 		ServletContext servletContext = getServletContext();
