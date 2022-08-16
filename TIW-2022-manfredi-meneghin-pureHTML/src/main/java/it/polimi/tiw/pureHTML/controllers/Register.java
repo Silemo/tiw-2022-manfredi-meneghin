@@ -1,8 +1,10 @@
 package it.polimi.tiw.pureHTML.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -10,14 +12,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.pureHTML.utils.*;
+import it.polimi.tiw.pureHTML.dao.AccountDAO;
 import it.polimi.tiw.pureHTML.dao.UserDAO;
 import it.polimi.tiw.pureHTML.beans.User;
+import it.polimi.tiw.pureHTML.beans.Account;
 
 /**
  * Servlet implementation class Register
@@ -71,6 +74,36 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// Tries to create the user, if the function returns null ends (createUser already re-directed)
+		User user = createUser(request, response);
+	
+		if (user == null) {
+			return;
+		}
+		
+		// Tries to create the account of the new user, if the function returns null ends (createAccount already re-directed)
+		if(createAccount(request, response, user) == null) {
+			
+			return;
+		}
+		
+		// Once the user is registered is redirected to the LoginPage
+		response.sendRedirect(getServletContext().getContextPath() + PathHelper.pathToLoginPage);
+	}
+
+	
+	/**
+	 * Verifies the input and if its correct creates the user in the DB. If the operation is successful
+	 * returns the User, if not returns null (and re-directs)
+	 * 
+	 * @param request
+	 * @param response
+	 * @return User
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private User createUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// Gets the parameters of the request and verifies if they are in the correct format (length and syntax)
 		String name       = request.getParameter("name");
 		String surname    = request.getParameter("surname");
@@ -78,138 +111,197 @@ public class Register extends HttpServlet {
 		String username   = request.getParameter("username");
 		String password   = request.getParameter("password");
 		String repeat_pwd = request.getParameter("repeat_pwd");
-		
+				
 		// Verifies if all parameters are not null
 		if(name == null || surname == null || email == null || username == null || password == null || repeat_pwd == null) {
 					
 			forwardToErrorPage(request, response, "Register module missing some data");
-			return;
+			return null;
 		}
-		
+				
 		// Checks if the inserted string (NAME) is of the correct length (1-45)
 		if (name.length() <= 0 || name.length() > 45) {
-			
+					
 			request.setAttribute("warning", "Chosen name invalid (a valid name has more than one character and less than 45)!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// Checks if the inserted string (SURNAME) is of the correct length (1-45)
 		if (surname.length() <= 0 || surname.length() > 45) {
-			
+					
 			request.setAttribute("warning", "Chosen surname invalid (a valid surname has more than one character and less than 45)!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// Checks if the inserted string (EMAIL) matches with an e-mail syntax (RCF2822 e-mail) by using a RegEx
 		String emailRegEx = "^([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?){3,320}$";
-		
+				
 		// If the string does not match the the user is redirected to the register page with an error message
 		if (!email.matches(emailRegEx)) {
-			
+					
 			request.setAttribute("warning", "Chosen email invalid!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// Checks if the inserted string (USERNAME) is of the correct length (1-45)
 		if (username.length() <= 0 || username.length() > 45) {
-			
+					
 			request.setAttribute("warning", "Chosen username invalid (a valid username has more than one character and less than 45)!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// Checks if the inserted strings (PASSWORD and REPEAT_PWD) are of the correct length (1-45) and equal
 		if (password.length() <= 0 || password.length() > 45 || !password.equals(repeat_pwd)) {
-			
+					
 			request.setAttribute("warning", "Chosen password invalid (a valid password has more than one character and less than 45)!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		if (!password.equals(repeat_pwd)) {
-			
+					
 			request.setAttribute("warning", "Password and repeat password field not equal!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// CHECKS that the submitted user for the registration has not the SAME EMAIL
 		// of another user in the DB.
 		// If another user with the same email is present redirects to the to the RegisterPage
 		// with a warning and error message
 		UserDAO userDAO = new UserDAO(connection);
 		User user = null;
-		
+				
 		try {
-			
+					
 			user = userDAO.findUserByEmail(email);
-			
+					
 		} catch (SQLException e) {
-			
+					
 			forwardToErrorPage(request, response, e.getMessage());
-			return;	
+			return null;	
 		}
-		
+				
 		if(user != null) {
-			
+					
 			request.setAttribute("warning", "Chosen email already in use!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// CHECKS that the submitted user for the registration has not the SAME USERNAME
 		// of another user in the DB.
 		// If another user with the same username is present redirects to the to the RegisterPage
 		// with a warning and error message
 		try {
-			
+					
 			user = userDAO.findUserByUsername(username);
-			
+					
 		} catch (SQLException e) {
-			
+					
 			forwardToErrorPage(request, response, e.getMessage());
-			return;	
+			return null;	
 		}
-		
+				
 		if(user != null) {
-			
+					
 			request.setAttribute("warning", "Chosen username already in use!");
 			forward(request, response, PathHelper.pathToRegisterPage);
-			return;
+			return null;
 		}
-		
+				
 		// Creates the submitted user in the DB
 		// If error are generated everything is forwarded to an errorPage
 		try {
-			
+					
 			userDAO.createUser(name, surname, email, username, password);
-		
-		} catch (SQLException e) {
 			
+		} catch (SQLException e) {
+					
 			forwardToErrorPage(request, response, e.getMessage());
-			return;	
+			return null;	
 		}
-		
-		// Gets the created user in the DB and adds it to the session and then redirects to HOME page,
+				
+		// Gets the created user in the DB to verify it has been correctly created in the DB,
 		// else if an Exception is raised forwards to the ErrorPage
 		try {
-			
+					
 			user = userDAO.findUserByEmail(email);
-		
+				
 		} catch (SQLException e) {
-			
+					
 			forwardToErrorPage(request, response, e.getMessage());
-			return;	
+			return null;	
 		}
-	
-		HttpSession session = request.getSession();
-		session.setAttribute("currentUser", user);
-		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
+		
+		if(user == null) {
+			
+			forwardToErrorPage(request, response, "Error: user non correctly created - registerPage!");
+			return null;
+		}
+		
+		return user;
 	}
-
+	
+	/**
+	 * Creates an account to the specified user in the DB. If the operation is successful
+	 * returns 0, if not returns null (and re-directs)
+	 * 
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private Integer createAccount(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
+		
+		// If a new user is registered a new Account for that user is also created
+		AccountDAO accountDAO = new AccountDAO(connection);
+				
+		// Creates account of user in the DB
+		// If error are generated everything is forwarded to an errorPage
+		
+		// TODO: remove BigDecimal and balance (account should be initialized at 0)
+		BigDecimal balance = new BigDecimal(10);
+				
+		try {
+							
+			accountDAO.createAccount(user.getId(), balance);
+							
+		} catch (SQLException e) {
+									
+			forwardToErrorPage(request, response, e.getMessage());
+			return null;	
+		}
+		
+		// Gets the created account in the DB to verify it has been correctly created in the DB,
+		// else if an Exception is raised forwards to the ErrorPage
+		List<Account> accounts = null;
+		try {
+							
+			accounts = accountDAO.findAccountsByUserId(user.getId());
+						
+		} catch (SQLException e) {
+							
+			forwardToErrorPage(request, response, e.getMessage());
+			return null;	
+		}
+		
+		if (accounts == null) {
+			
+			forwardToErrorPage(request, response, "Error: account non correctly created - registerPage!");
+			return null;
+		}
+		
+		return 0;
+	}
+	
+	
 	/**
 	 * Forwards to the ErrorPage
 	 * 
@@ -241,4 +333,6 @@ public class Register extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		templateEngine.process(path, ctx, response.getWriter());
 	}
+	
+	
 }
