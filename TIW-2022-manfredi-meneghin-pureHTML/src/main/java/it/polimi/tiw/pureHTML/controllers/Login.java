@@ -23,11 +23,11 @@ import it.polimi.tiw.pureHTML.utils.*;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/Login")
+@WebServlet(name = "Login", urlPatterns = {"/Login"}, loadOnStartup = 1)
 public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private Connection connection;
+	private Connection connection = null;
 	private TemplateEngine templateEngine;
 
        
