@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.dao;
+package it.polimi.tiw.projects.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.tiw.pureHTML.beans.Transfer;
+import it.polimi.tiw.projects.beans.Transfer;
 
 /**
  * Data Access Object for the Transfer table in the mySQL server

@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.beans;
+package it.polimi.tiw.projects.beans;
 
 /**
  * Java bean for the User information

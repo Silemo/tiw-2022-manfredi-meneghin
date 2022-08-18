@@ -1,9 +1,6 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,77 +13,63 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.beans.Account;
-import it.polimi.tiw.pureHTML.beans.User;
-import it.polimi.tiw.pureHTML.dao.AccountDAO;
-import it.polimi.tiw.pureHTML.utils.ConnectionHandler;
-import it.polimi.tiw.pureHTML.utils.PathHelper;
-import it.polimi.tiw.pureHTML.utils.TemplateHandler;
+import it.polimi.tiw.projects.beans.Account;
+import it.polimi.tiw.projects.beans.Transfer;
+import it.polimi.tiw.projects.utils.PathHelper;
+import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
- * Servlet implementation class GoToHome
+ * Servlet implementation class GoToTransferConfirmedPage
  */
-@WebServlet("/GoToHome")
-public class GoToHome extends HttpServlet {
+@WebServlet("/GoToTransferConfirmedPage")
+public class GoToTransferConfirmedPage extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
-	private Connection connection;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GoToHome() {
+    public GoToTransferConfirmedPage() {
         
     	super();
     }
-
+    
     @Override
     public void init() throws ServletException {
     	
     	ServletContext servletContext = getServletContext();
 		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
-		this.connection = ConnectionHandler.getConnection(servletContext);
     }
-    
-    @Override
-    public void destroy() {
-    	
-		try {
-			
-			ConnectionHandler.closeConnection(connection);
-		
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-	}
-    
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Gets the current user from the session
+		// Gets the parameters of the transaction and verifies if they are null or not, if so redirects to an errorPage
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		Account  sourceAccount     = (Account) session.getAttribute("sourceAccount");
+		Account  destAccount       = (Account) session.getAttribute("destAccount");
+		Transfer transfer          = (Transfer)session.getAttribute("transfer");
+		Boolean  transferInfoShown = (Boolean) session.getAttribute("transferInfoShown");
 		
-		// Gets the accounts that belong to the user, if the operation is successful saves them in the request and then redirects
-		AccountDAO bankAccountDAO = new AccountDAO(connection);
-		List<Account> theirAccounts;
-		
-		try {
+		if(sourceAccount == null || destAccount == null || transfer == null || transferInfoShown == null) {
 			
-			theirAccounts = bankAccountDAO.findAccountsByUserId(currentUser.getId());
-			
-		} catch(SQLException e) {
-			
-			forwardToErrorPage(request, response, e.getMessage());
-			return;	
+			forwardToErrorPage(request, response, "No transfer to show");
+			return;
 		}
 		
+		// if all parameters are not null puts a "infoShownFlag" in the request and sets the informations as shown in the session
+		request.setAttribute("transferInfoShown", transferInfoShown);
 		
-		request.setAttribute("accounts", theirAccounts);
-		forward(request, response, PathHelper.pathToHomePage);
+		if(!transferInfoShown) {
+			
+			session.setAttribute("transferInfoShown", true);
+		}
+		
+		// then forwards to ConfirmedPage
+		forward(request, response, PathHelper.pathToTransferConfirmedPage);
+	
 	}
 
 	/**
@@ -96,7 +79,7 @@ public class GoToHome extends HttpServlet {
 		
 		doGet(request, response);
 	}
-	
+
 	/**
 	 * Forwards to the ErrorPage
 	 * 

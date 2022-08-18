@@ -1,9 +1,9 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,17 +16,18 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.beans.User;
-import it.polimi.tiw.pureHTML.dao.AccountDAO;
-import it.polimi.tiw.pureHTML.utils.ConnectionHandler;
-import it.polimi.tiw.pureHTML.utils.PathHelper;
-import it.polimi.tiw.pureHTML.utils.TemplateHandler;
+import it.polimi.tiw.projects.beans.Account;
+import it.polimi.tiw.projects.beans.User;
+import it.polimi.tiw.projects.dao.AccountDAO;
+import it.polimi.tiw.projects.utils.ConnectionHandler;
+import it.polimi.tiw.projects.utils.PathHelper;
+import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
- * Servlet implementation class CreateAccount
+ * Servlet implementation class GoToHome
  */
-@WebServlet("/CreateAccount")
-public class CreateAccount extends HttpServlet {
+@WebServlet("/GoToHome")
+public class GoToHome extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
@@ -35,11 +36,11 @@ public class CreateAccount extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateAccount() {
+    public GoToHome() {
         
     	super();
     }
-    
+
     @Override
     public void init() throws ServletException {
     	
@@ -47,13 +48,45 @@ public class CreateAccount extends HttpServlet {
 		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
 		this.connection = ConnectionHandler.getConnection(servletContext);
     }
-
+    
+    @Override
+    public void destroy() {
+    	
+		try {
+			
+			ConnectionHandler.closeConnection(connection);
+		
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Gets the current user from the session
+		HttpSession session = request.getSession(false);
+		User currentUser = (User)session.getAttribute("currentUser");
 		
-		doPost(request, response);
+		// Gets the accounts that belong to the user, if the operation is successful saves them in the request and then redirects
+		AccountDAO bankAccountDAO = new AccountDAO(connection);
+		List<Account> theirAccounts;
+		
+		try {
+			
+			theirAccounts = bankAccountDAO.findAccountsByUserId(currentUser.getId());
+			
+		} catch(SQLException e) {
+			
+			forwardToErrorPage(request, response, e.getMessage());
+			return;	
+		}
+		
+		
+		request.setAttribute("accounts", theirAccounts);
+		forward(request, response, PathHelper.pathToHomePage);
 	}
 
 	/**
@@ -61,29 +94,9 @@ public class CreateAccount extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Creates a new account for the user currently logged in
-		
-		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
-		
-		AccountDAO accountDAO = new AccountDAO(connection);
-		
-		// TODO: remove BigDecimal and balance (account should be initialized at 0)
-		BigDecimal balance = new BigDecimal(10);
-		
-		try {
-			
-			accountDAO.createAccount(currentUser.getId(), balance);
-			
-		}catch (SQLException e) {
-			
-			forwardToErrorPage(request, response, e.getMessage());
-			return;		
-		}
-		
-		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
+		doGet(request, response);
 	}
-
+	
 	/**
 	 * Forwards to the ErrorPage
 	 * 

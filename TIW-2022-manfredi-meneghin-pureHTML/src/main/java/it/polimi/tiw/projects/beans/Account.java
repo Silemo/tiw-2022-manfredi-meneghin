@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.beans;
+package it.polimi.tiw.projects.beans;
 
 import java.math.BigDecimal;
 

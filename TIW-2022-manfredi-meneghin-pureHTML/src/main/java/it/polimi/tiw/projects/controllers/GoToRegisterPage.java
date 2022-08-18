@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
 
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.utils.PathHelper;
-import it.polimi.tiw.pureHTML.utils.TemplateHandler;
+import it.polimi.tiw.projects.utils.PathHelper;
+import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
  * Servlet implementation class GoToRegisterPage

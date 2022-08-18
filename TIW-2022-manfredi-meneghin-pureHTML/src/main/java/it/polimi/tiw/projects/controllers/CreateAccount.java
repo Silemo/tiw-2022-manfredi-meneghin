@@ -1,6 +1,9 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -13,24 +16,26 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.beans.Account;
-import it.polimi.tiw.pureHTML.beans.Transfer;
-import it.polimi.tiw.pureHTML.utils.PathHelper;
-import it.polimi.tiw.pureHTML.utils.TemplateHandler;
+import it.polimi.tiw.projects.beans.User;
+import it.polimi.tiw.projects.dao.AccountDAO;
+import it.polimi.tiw.projects.utils.ConnectionHandler;
+import it.polimi.tiw.projects.utils.PathHelper;
+import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
- * Servlet implementation class GoToTransferConfirmedPage
+ * Servlet implementation class CreateAccount
  */
-@WebServlet("/GoToTransferConfirmedPage")
-public class GoToTransferConfirmedPage extends HttpServlet {
+@WebServlet("/CreateAccount")
+public class CreateAccount extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
+	private Connection connection;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GoToTransferConfirmedPage() {
+    public CreateAccount() {
         
     	super();
     }
@@ -40,36 +45,15 @@ public class GoToTransferConfirmedPage extends HttpServlet {
     	
     	ServletContext servletContext = getServletContext();
 		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
+		this.connection = ConnectionHandler.getConnection(servletContext);
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Gets the parameters of the transaction and verifies if they are null or not, if so redirects to an errorPage
-		HttpSession session = request.getSession(false);
-		Account  sourceAccount     = (Account) session.getAttribute("sourceAccount");
-		Account  destAccount       = (Account) session.getAttribute("destAccount");
-		Transfer transfer          = (Transfer)session.getAttribute("transfer");
-		Boolean  transferInfoShown = (Boolean) session.getAttribute("transferInfoShown");
 		
-		if(sourceAccount == null || destAccount == null || transfer == null || transferInfoShown == null) {
-			
-			forwardToErrorPage(request, response, "No transfer to show");
-			return;
-		}
-		
-		// if all parameters are not null puts a "infoShownFlag" in the request and sets the informations as shown in the session
-		request.setAttribute("transferInfoShown", transferInfoShown);
-		
-		if(!transferInfoShown) {
-			
-			session.setAttribute("transferInfoShown", true);
-		}
-		
-		// then forwards to ConfirmedPage
-		forward(request, response, PathHelper.pathToTransferConfirmedPage);
-	
+		doPost(request, response);
 	}
 
 	/**
@@ -77,7 +61,27 @@ public class GoToTransferConfirmedPage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		doGet(request, response);
+		// Creates a new account for the user currently logged in
+		
+		HttpSession session = request.getSession(false);
+		User currentUser = (User)session.getAttribute("currentUser");
+		
+		AccountDAO accountDAO = new AccountDAO(connection);
+		
+		// TODO: remove BigDecimal and balance (account should be initialized at 0)
+		BigDecimal balance = new BigDecimal(10);
+		
+		try {
+			
+			accountDAO.createAccount(currentUser.getId(), balance);
+			
+		}catch (SQLException e) {
+			
+			forwardToErrorPage(request, response, e.getMessage());
+			return;		
+		}
+		
+		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
 	}
 
 	/**

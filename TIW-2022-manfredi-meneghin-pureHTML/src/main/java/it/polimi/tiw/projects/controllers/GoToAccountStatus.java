@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,14 +16,14 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.beans.Account;
-import it.polimi.tiw.pureHTML.beans.Transfer;
-import it.polimi.tiw.pureHTML.beans.User;
-import it.polimi.tiw.pureHTML.dao.AccountDAO;
-import it.polimi.tiw.pureHTML.dao.TransferDAO;
-import it.polimi.tiw.pureHTML.utils.ConnectionHandler;
-import it.polimi.tiw.pureHTML.utils.PathHelper;
-import it.polimi.tiw.pureHTML.utils.TemplateHandler;
+import it.polimi.tiw.projects.beans.Account;
+import it.polimi.tiw.projects.beans.Transfer;
+import it.polimi.tiw.projects.beans.User;
+import it.polimi.tiw.projects.dao.AccountDAO;
+import it.polimi.tiw.projects.dao.TransferDAO;
+import it.polimi.tiw.projects.utils.ConnectionHandler;
+import it.polimi.tiw.projects.utils.PathHelper;
+import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
  * Servlet implementation class GoToAccountStatus

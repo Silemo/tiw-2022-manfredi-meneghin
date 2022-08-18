@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.utils;
+package it.polimi.tiw.projects.utils;
 
 import javax.servlet.ServletContext;
 

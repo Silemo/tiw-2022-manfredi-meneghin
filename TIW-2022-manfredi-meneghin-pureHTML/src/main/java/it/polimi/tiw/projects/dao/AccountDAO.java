@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.dao;
+package it.polimi.tiw.projects.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.tiw.pureHTML.beans.Account;
+import it.polimi.tiw.projects.beans.Account;
 
 /**
  * Data Access Object for the Account table in the mySQL server

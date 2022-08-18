@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +16,9 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.beans.User;
-import it.polimi.tiw.pureHTML.dao.UserDAO;
-import it.polimi.tiw.pureHTML.utils.*;
+import it.polimi.tiw.projects.beans.User;
+import it.polimi.tiw.projects.dao.UserDAO;
+import it.polimi.tiw.projects.utils.*;
 
 /**
  * Servlet implementation class Login
