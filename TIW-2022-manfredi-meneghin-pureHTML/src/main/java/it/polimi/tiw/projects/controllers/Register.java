@@ -1,4 +1,4 @@
-package it.polimi.tiw.pureHTML.controllers;
+package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.pureHTML.utils.*;
-import it.polimi.tiw.pureHTML.dao.AccountDAO;
-import it.polimi.tiw.pureHTML.dao.UserDAO;
-import it.polimi.tiw.pureHTML.beans.User;
-import it.polimi.tiw.pureHTML.beans.Account;
+import it.polimi.tiw.projects.utils.*;
+import it.polimi.tiw.projects.dao.AccountDAO;
+import it.polimi.tiw.projects.dao.UserDAO;
+import it.polimi.tiw.projects.beans.User;
+import it.polimi.tiw.projects.beans.Account;
 
 /**
  * Servlet implementation class Register
@@ -74,16 +74,8 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Tries to create the user, if the function returns null ends (createUser already re-directed)
-		User user = createUser(request, response);
-	
-		if (user == null) {
-			return;
-		}
-		
-		// Tries to create the account of the new user, if the function returns null ends (createAccount already re-directed)
-		if(createAccount(request, response, user) == null) {
-			
+		// Tries to register the user, if the function returns null ends (registerUser already re-directed)
+		if (registerUser(request, response) == null) {
 			return;
 		}
 		
@@ -93,8 +85,8 @@ public class Register extends HttpServlet {
 
 	
 	/**
-	 * Verifies the input and if its correct creates the user in the DB. If the operation is successful
-	 * returns the User, if not returns null (and re-directs)
+	 * Verifies the input and if it is correct creates the user in the DB and an account of the user. 
+	 * If the operation is successful returns 0, else returns null
 	 * 
 	 * @param request
 	 * @param response
@@ -102,7 +94,7 @@ public class Register extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private User createUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private Integer registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Gets the parameters of the request and verifies if they are in the correct format (length and syntax)
 		String name       = request.getParameter("name");
@@ -214,11 +206,14 @@ public class Register extends HttpServlet {
 			return null;
 		}
 				
+		// TODO: remove BigDecimal and balance (account should be initialized at 0)
+		BigDecimal balance = new BigDecimal(10);
+		
 		// Creates the submitted user in the DB
 		// If error are generated everything is forwarded to an errorPage
 		try {
 					
-			userDAO.createUser(name, surname, email, username, password);
+			userDAO.registerUser(name, surname, email, username, password, balance);
 			
 		} catch (SQLException e) {
 					
@@ -244,56 +239,23 @@ public class Register extends HttpServlet {
 			return null;
 		}
 		
-		return user;
-	}
-	
-	/**
-	 * Creates an account to the specified user in the DB. If the operation is successful
-	 * returns 0, if not returns null (and re-directs)
-	 * 
-	 * @param request
-	 * @param response
-	 * @param user
-	 * @return
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private Integer createAccount(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException {
-		
-		// If a new user is registered a new Account for that user is also created
+		// Gets the created account in the DB to verify it has been correctly created in the DB,
+		// else if an Exception is raised forwards to the ErrorPage
+		List<Account> accounts = null;
 		AccountDAO accountDAO = new AccountDAO(connection);
-				
-		// Creates account of user in the DB
-		// If error are generated everything is forwarded to an errorPage
 		
-		// TODO: remove BigDecimal and balance (account should be initialized at 0)
-		BigDecimal balance = new BigDecimal(10);
-				
 		try {
-							
-			accountDAO.createAccount(user.getId(), balance);
-							
+									
+			accounts = accountDAO.findAccountsByUserId(user.getId());
+								
 		} catch (SQLException e) {
 									
 			forwardToErrorPage(request, response, e.getMessage());
 			return null;	
 		}
-		
-		// Gets the created account in the DB to verify it has been correctly created in the DB,
-		// else if an Exception is raised forwards to the ErrorPage
-		List<Account> accounts = null;
-		try {
-							
-			accounts = accountDAO.findAccountsByUserId(user.getId());
-						
-		} catch (SQLException e) {
-							
-			forwardToErrorPage(request, response, e.getMessage());
-			return null;	
-		}
-		
+				
 		if (accounts == null) {
-			
+					
 			forwardToErrorPage(request, response, "Error: account non correctly created - registerPage!");
 			return null;
 		}

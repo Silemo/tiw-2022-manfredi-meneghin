@@ -1,11 +1,12 @@
-package it.polimi.tiw.pureHTML.dao;
+package it.polimi.tiw.projects.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import it.polimi.tiw.pureHTML.beans.User;
+import it.polimi.tiw.projects.beans.User;
 
 /**
  * Data Access Object for the User table in the mySQL server
@@ -293,6 +294,155 @@ public class UserDAO {
 			throw new SQLException("Error accessing the DB when" + performedAction);
 		
 		} finally {
+			
+			try {
+				
+				preparedStatementAddUser.close();
+			
+			} catch (Exception e) {
+				
+				throw new SQLException("Error closing the statement when" + performedAction);
+			}
+		}
+	}
+	
+	// TODO: verify this transactions are correct
+	
+	/**
+	 * Creates a new User in the bank database and an Account of the user
+	 * In case of error raises an SQLException
+	 * 
+	 * @param name the user's name
+	 * @param surname the user's surname
+	 * @param email the user's email (UNIQUE)
+	 * @param username the user's username (UNIQUE)
+	 * @param password the user's password
+	 * @throws SQLException
+	 */
+	public void registerUser(String name, String surname, String email, String username, String password) throws SQLException {
+		
+		String performedAction = " registering a new user in the database";
+		String queryAddUser    = "INSERT INTO bankDB.user (name,surname,email,username,password) VALUES(?,?,?,?,?)";
+		AccountDAO accountDAO  = new AccountDAO(connection);
+		PreparedStatement preparedStatementAddUser = null;	
+		int user_id;
+		
+		try {
+			// Deactivate auto-commit to ensure an atomic transaction
+			connection.setAutoCommit(false);
+			
+			preparedStatementAddUser    = connection.prepareStatement(queryAddUser);
+			
+			// First operation - Creating the user in the bankDB.user table
+			preparedStatementAddUser.setString(1, name);
+			preparedStatementAddUser.setString(2, surname);
+			preparedStatementAddUser.setString(3, email);
+			preparedStatementAddUser.setString(4, username);
+			preparedStatementAddUser.setString(5, password);
+			preparedStatementAddUser.executeUpdate();
+			
+			try (ResultSet rs = preparedStatementAddUser.getGeneratedKeys()) {
+				
+                if (rs.first()) {
+                	
+                    user_id = rs.getInt(1); // retrieve userID
+                    
+                    // Second operation -  Create account in the bankDB.account table
+                    accountDAO.createAccount(user_id);
+                }
+                
+                else {
+                	
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+			
+			// Commit the whole transaction
+			connection.commit();
+			
+		} catch(SQLException e) {
+			// If an SQLException is raised a roll-back to the last commit is needed
+			connection.rollback();
+			
+			throw new SQLException("Error accessing the DB when" + performedAction);
+		
+		} finally {
+			// When the transaction is completed (successfully or not) we need to resume the auto-commit
+			connection.setAutoCommit(true);
+			
+			try {
+				
+				preparedStatementAddUser.close();
+			
+			} catch (Exception e) {
+				
+				throw new SQLException("Error closing the statement when" + performedAction);
+			}
+		}
+	}
+	
+	/**
+	 * Creates a new User in the bank database and an Account of the user to the specified balance
+	 * In case of error raises an SQLException
+	 * 
+	 * @param name the user's name
+	 * @param surname the user's surname
+	 * @param email the user's email (UNIQUE)
+	 * @param username the user's username (UNIQUE)
+	 * @param password the user's password
+	 * @param balance the balance to initialize the account to
+	 * @throws SQLException
+	 */
+	public void registerUser(String name, String surname, String email, String username, String password, BigDecimal balance) throws SQLException {
+		
+		String performedAction = " registering a new user in the database";
+		String queryAddUser    = "INSERT INTO bankDB.user (name,surname,email,username,password) VALUES(?,?,?,?,?)";
+		AccountDAO accountDAO  = new AccountDAO(connection);
+		PreparedStatement preparedStatementAddUser = null;	
+		int user_id;
+		
+		try {
+			// Deactivate auto-commit to ensure an atomic transaction
+			connection.setAutoCommit(false);
+			
+			preparedStatementAddUser    = connection.prepareStatement(queryAddUser);
+			
+			// First operation - Creating the user in the bankDB.user table
+			preparedStatementAddUser.setString(1, name);
+			preparedStatementAddUser.setString(2, surname);
+			preparedStatementAddUser.setString(3, email);
+			preparedStatementAddUser.setString(4, username);
+			preparedStatementAddUser.setString(5, password);
+			preparedStatementAddUser.executeUpdate();
+			
+			try (ResultSet rs = preparedStatementAddUser.getGeneratedKeys()) {
+				
+                if (rs.first()) {
+                	
+                    user_id = rs.getInt(1); // retrieve userID
+                    
+                    // Second operation -  Create account in the bankDB.account table
+                    accountDAO.createAccount(user_id, balance);
+                }
+                
+                else {
+                	
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+			
+			// Commit the whole transaction
+			connection.commit();
+			
+		} catch(SQLException e) {
+			// If an SQLException is raised a roll-back to the last commit is needed
+			connection.rollback();
+			
+			throw new SQLException("Error accessing the DB when" + performedAction);
+		
+		} finally {
+			// When the transaction is completed (successfully or not) we need to resume the auto-commit
+			connection.setAutoCommit(true);
 			
 			try {
 				
