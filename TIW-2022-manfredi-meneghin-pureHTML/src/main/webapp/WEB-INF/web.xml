@@ -20,4 +20,30 @@
   <welcome-file-list>
     <welcome-file>/login.html</welcome-file>
   </welcome-file-list>
+  
+  <filter>
+  	<filter-name>CheckLoggedUser</filter-name>
+  	<filter-class>it.polimi.tiw.projects.filters.CheckLoggedUser</filter-class>
+  </filter>
+  <filter>
+  	<filter-name>CheckNotLoggedUser</filter-name>
+  	<filter-class>t.polimi.tiw.projects.filters.CheckNotLoggedUser</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>CheckNotLoggedUser</filter-name>
+  	<url-pattern>/</url-pattern>
+  	<url-pattern>/GoToLoginPage</url-pattern>
+    <url-pattern>/Login</url-pattern>
+  	<url-pattern>/GoToRegisterPage</url-pattern>
+  	<url-pattern>/Register</url-pattern>	
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>CheckLoggedUser</filter-name>
+  	<url-pattern>/GoToHome</url-pattern>
+  	<url-pattern>/CreateAccount</url-pattern>
+  	<url-pattern>/GoToAccountStatus</url-pattern>
+  	<url-pattern>/MakeTransfer</url-pattern>
+  	<url-pattern>/GoToTransferConfirmedPage</url-pattern>
+  </filter-mapping>
+  
 </web-app>
