@@ -72,9 +72,3 @@ $RECYCLE.BIN/
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
-
-# eclipse settings files
-/.settings
-/build
-.classpath
-.project
