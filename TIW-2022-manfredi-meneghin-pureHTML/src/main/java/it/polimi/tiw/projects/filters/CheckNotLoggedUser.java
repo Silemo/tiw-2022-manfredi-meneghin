@@ -27,6 +27,7 @@ import it.polimi.tiw.projects.utils.PathHelper;
 @WebFilter("/CheckNotLoggedUser")
 public class CheckNotLoggedUser extends HttpFilter implements Filter {
      
+	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	
     /**
