@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Login page</title>
+</head>
+<body>
+	<h1>Welcome to your online banking application</h1>
+
+	<form action="Login" method="POST">
+		   Email: <input type="text"     name="username" required> <br>
+		Password: <input type="password" name="pwd"      required><br>
+		<input type="submit" value="login">
+		<p th:text=" ${warning}"></p>
+	</form>
+
+	<a class="register-link" th:href="@{/GoToRegisterPage}">Register</a>
+	
+</body>
+</html>
