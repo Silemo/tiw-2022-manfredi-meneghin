@@ -36,8 +36,8 @@ public class MakeTransfer extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public MakeTransfer() {   
-        
     	super();
+    	// TODO Auto-generated constructor stub
     }
     
     @Override
@@ -65,7 +65,7 @@ public class MakeTransfer extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		// TODO Auto-generated method stub
 		doPost(request, response);
 	}
 
@@ -219,12 +219,9 @@ public class MakeTransfer extends HttpServlet {
 		transfer.setAmount(amount);
 		transfer.setReason(reason);
 		
-		// TODO: I don't like saving this many arguments in the session but I don't know if there is any other option
 		session.setAttribute("transfer", transfer);
 		session.setAttribute("sourceAccount", sourceAccount);
 		session.setAttribute("destAccount", destAccount);
-		
-		// TODO: do we need this??
 		session.setAttribute("transferInfoShown", false);
 		
 		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToTransferConfirmedServletPath);

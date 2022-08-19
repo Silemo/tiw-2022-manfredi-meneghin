@@ -25,45 +25,45 @@ import it.polimi.tiw.projects.utils.PathHelper;
  * Servlet Filter implementation class CheckNotLoggedUser
  */
 @WebFilter("/CheckNotLoggedUser")
-public class CheckNotLoggedUser extends HttpFilter implements Filter {
-     
-	private static final long serialVersionUID = 1L;
+public class CheckNotLoggedUser implements Filter {
+
 	private TemplateEngine templateEngine;
-	
-    /**
-     * @see HttpFilter#HttpFilter()
-     */
-    public CheckNotLoggedUser() {
-        
-    	super();
-    }
+
+	/**
+	 * @see HttpFilter#HttpFilter()
+	 */
+	public CheckNotLoggedUser() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see Filter#destroy()
 	 */
 	public void destroy() {
-		
+		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession s = req.getSession(false);
-		
-		//System.out.println("not logged user filter activated");
-		if(s != null) {
+
+		// System.out.println("not logged user filter activated");
+		if (s != null) {
 			Object user = s.getAttribute("currentUser");
-			if(user != null) {
+			if (user != null) {
 				res.sendRedirect(request.getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
 				return;
 			}
-		} 
+		}
 
-		//System.out.println("not logged user filter didn't find user");
+		// System.out.println("not logged user filter didn't find user");
 		chain.doFilter(request, response);
 	}
 
@@ -71,7 +71,7 @@ public class CheckNotLoggedUser extends HttpFilter implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		
+
 		ServletContext servletContext = fConfig.getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 		templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -80,12 +80,22 @@ public class CheckNotLoggedUser extends HttpFilter implements Filter {
 		templateResolver.setSuffix(".html");
 	}
 	
-	public void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
-		
+	/**
+	 * Forwards to the specified path
+	 * 
+	 * @param request
+	 * @param response
+	 * @param path
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void forward(HttpServletRequest request, HttpServletResponse response, String path)
+			throws ServletException, IOException {
+
 		ServletContext servletContext = request.getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		templateEngine.process(path, ctx, response.getWriter());
-		
+
 	}
 
 }
