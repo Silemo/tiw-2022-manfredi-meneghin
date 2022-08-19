@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="css/global.css" th:href="@{/css/global.css}"/>
+	<link rel="stylesheet" type="text/css" href="css/transfer-confirmed.css" th:href="@{/css/transferConfirmed.css}"/>
+	<title>Transfer Confirmed</title>
+</head>
+<body>
+	<div th:replace="/WEB-INF/infoPane :: header"> </div>
+	
+	<div class="transfer-confirmed">
+
+		<div class="transfer-confirmed-title"><span th:text="${transferInfoShown} ? 'Last transfer' : 'Transfer' ">Transfer</span> confirmed</div>
+		
+	
+		<div class="transfer-div">		
+			<div class="tranfer-source">
+				<div class="title">Source Account</div>
+				<div class="content">
+					Owner Code: <span th:text=${session.sourceAccount.getUserId()}>3</span><br>
+					Account Code: <span th:text=${session.sourceAccount.code}>3</span><br>
+					New Balance: <span th:text=${session.sourceAccount.balance}>34.56</span>&euro;
+				</div>
+			</div>
+			<div class="transfer">
+				<div class="title">Transfer</div>
+				<div class="content">
+					Amount: <span th:text=${session.transfer.amount}>34.56</span>&euro;<br>
+					Reason: <span th:text=${session.transfer.reason}>salary</span>
+				</div>
+			</div>
+			<div class="tranfer-destination">
+				<div class="title">Destination Account</div>
+				<div class="content">
+					Owner Code: <span th:text=${session.destAccount.getUserId()}>4</span><br>
+					Account Code: <span th:text=${session.destAccount.code}>4</span><br>
+					New Balance:  <span th:text=${session.destAccount.balance}>40.56</span>&euro;
+				</div>
+			</div>
+		</div>
+		<hr>
+		<a th:href="@{/GoToAccountStatus(accountCode = ${session.sourceAccount.code})}">Return to Account</a>
+	</div>
+</body>
+</html>
