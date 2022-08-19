@@ -41,7 +41,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,1,1000.05),(2,2,2000.99),(3,3,1000000.85),(4,3,2000000.95),(5,1,285.60);
+INSERT INTO `account` VALUES (1,1,1000.05),(2,2,2000.99),(3,3,1000000.85),(4,3,2000000.95),(5,1,285.60),(6,4,4000);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +72,7 @@ CREATE TABLE `transfer` (
 
 LOCK TABLES `transfer` WRITE;
 /*!40000 ALTER TABLE `transfer` DISABLE KEYS */;
-INSERT INTO `transfer` VALUES (1,'2022-03-03 00:05:55',1000.00,'project funding',3,1),(2,'2022-04-05 10:35:01',500.00,'cash',5,2);
+INSERT INTO `transfer` VALUES (1,'2022-03-03 00:05:55',3,1,1000.00,'project funding'),(2,'2022-04-05 10:35:01',5,2,500.00,'cash'),(3,'2022-08-05 03:35:01',3,6,200.00,'refund');
 /*!40000 ALTER TABLE `transfer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,7 +102,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Giovanni','Manfredi','giovanni@polimi.it','Gio','passwordDifficile23'),(2,'Sebastiano','Meneghin','sebastiano@polimi.it','Seba','passwordDifficile25'),(3,'Jeff','Bezos','boss@amazon.com','Jeffrey','youCanDoIt');
+INSERT INTO `user` VALUES (1,'Giovanni','Manfredi','giovanni@polimi.it','Gio','passwordDifficile23'),(2,'Sebastiano','Meneghin','sebastiano@polimi.it','Seba','passwordDifficile25'),(3,'Jeff','Bezos','boss@amazon.com','Jeffrey','youCanDoIt'),(4,'Jim','Gray','admin@ibm.com','admin','admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
