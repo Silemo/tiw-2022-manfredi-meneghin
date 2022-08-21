@@ -1,56 +1,172 @@
 <!DOCTYPE html>
-
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="css/global.css" th:href="@{/css/global.css}"/>
-	<link rel="stylesheet" type="text/css" href="css/home.css" th:href="@{/css/home.css}" />
+	<link rel="stylesheet" type="text/css" href="css/global.css"/>
+	<link rel="stylesheet" type="text/css" href="css/home.css"/>
+	<link rel="stylesheet" type="text/css" href="css/loading.css"/>
+    <script src="js/utils.js" charset="utf-8" defer></script>
+    <script src="js/bank.js" charset="utf-8" defer></script>
 	<title>Home</title>
 </head>
 <body>
-	<div th:replace="/WEB-INF/infoPane :: header"> </div>
-	
-	<div class="home-title">Welcome to your home, <span th:text="${session.currentUser.name}">user</span></div>
+	<div class="home-title">Welcome to your home, <b><span id="userName">user</span></b></div>
 	<div class="home-subtitle">Nice to see you again!</div>
+    
+    <div class="header-div">
+        <div class="header-title">You are logged as</div>
+        <div class="header-content">
+            Username: <b><span id="headerUserName">John</span></b><br>
+            Personal code: <b><span id="headerUserCode">0476</span></b>
+            <div class="header-buttons">
+                <a id="logout-button" class="btn btn-medium btn-inverted-purple" href="Logout">Log out</a>
+            </div>
+        </div>
+    </div>
+
+
+	<div class="container">
+		<div class="accounts-div">
+			<div id="create-account-form" class="create-div purple-div">
+				<div class="create-title">Here you can create a new account</div>
+				<form class="create-account-form" action="#">
+					<input id="account-form-button" class="btn btn-large btn-purple" type="button" value="Create account"/>
+				</form>
+				<div id="create-account-warning" class="warning-message">Warning message!</div>
+			</div>
 	
-	<div class="home-div">
-		<div class="create-div purple-div">
-			<div class="create-title">Here you can create a new account</div>
-			<form class="home-form" method="POST" th:action="@{/CreateAccount}">
-				<button class="btn btn-large btn-purple" type="submit">Create account</button>
-			</form>
-			<div class="warning-message" th:if="${warning}">
-				<span th:text="${warning}">Warning message</span>
+			<div class="account-list-div purple-div">
+                <a id="create-account-button" class="btn btn-purple btn-small btn-primary">Create account</a>
+                <div class="account-title">Accounts</div>
+                <hr>
+				<div id="accounts">
+					<div class="card card-blue">
+						<div class="card-title">Account code: <b><span id="accountCode">32</span></b></div>
+						<div class="card-data">
+							<b>Balance: </b>100254.00&euro;
+						</div>		
+						<a class="btn btn-purple btn-small btn-primary">Open</a>
+					</div>
+					<div class="card card-blue even">
+						<div class="card-title">Account code: <b><span id="accountCode">42</span></b></div>
+						<div class="card-data">
+							<b>Balance: </b>30000.00&euro;
+						</div>		
+						<a class="btn btn-purple btn-small btn-primary">Open</a>
+					</div>
+				</div>	
+			</div>
+        </div>
+        
+        
+
+		<div id="account-details" class="status-div">
+			<div id="create-transfer-form" class="create-div purple-div">
+				<div class="create-title">Here you can create a new transfer</div>
+				<form class="status-form" action="#">
+					<div class="form-group">
+						<label for="destUserId">Dest. User</label>
+						<input type="number" placeholder="Enter the code of the receiving user" name="destUserId" list="dest-ids-datalist" min=0 required><br>
+						<datalist id="dest-ids-datalist">		
+						</datalist>
+					</div>
+					<div class="form-group">
+						<label for="destAccountId">Dest. Account</label>
+						<input type="number" placeholder="Enter the code of the destination account" name="destAccountId" list="dest-accounts-datalist" min=0 required><br>
+						<datalist id="dest-accounts-datalist">		
+						</datalist>
+					</div>
+					<div class="form-group">
+						<label for="amount">Amount</label>
+						<input type="number" step=0.01 placeholder="How much do you want to transfer" name="amount" min=0.01 required>
+					</div>
+					<div class="form-group">
+						<label for="reason">Reason</label>
+						<input type="text" placeholder="Enter the reason" name="reason" required><br>
+					</div>
+					<input type="hidden" name="sourceAccountId">
+					<input id="transfer-form-button" class="btn btn-large btn-purple" type="button" value="Make transfer" />
+				</form>
+				<div id="create-transfer-warning" class="warning-message">Warning message!</div>
+			</div>
+	
+			<div class="transfers-div purple-div">
+				<a id="create-transfer-button" class="btn btn-purple btn-small btn-primary">Create transfer</a>
+				<div class="transfers-title">Transfers of account: <b><span id="account-name">00000</span></b></div>
+				<hr>
+				<div class="account-code">Account Code: <b><span id="account-code">00000</span></b></div>
+				<div class="account-balance">Account Balance: <b><span id="account-balance">100</span>&euro;</b></div>
+				<div id="transfers-message">You have no transfers for this account :(</div>
+				<div id="transfers">
+					<div class="linked-card linked-card-blue">
+						<div class="linked-card-title">Account: 54455</div>
+						<div class="linked-card-data">
+							<div><b>Timestamp: </b><span>28/04/2020 18:45</span></div>
+							<div class="transfers-amount positive">+100.00&euro;</div>
+							<div><b>Reason: </b><span>Refund</span></div>
+						</div>
+					</div>
+					<div class="linked-card linked-card-blue">
+						<div class="linked-card-title">Account: 212222</div>
+						<div class="linked-card-data">
+							<div><b>Timestamp: </b><span>28/12/2020 22:45</span></div>
+							<div class="transfers-amount negative">-156.00&euro;</div>
+							<div><b>Reason: </b><span>Cash</span></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div class="account-div purple-div">
-			<div class="account-title">Here there are your accounts</div>
-			<div th:remove="all-but-first">
-				<div class="card card-blue" th:each="account : ${accounts}" th:classappend="${accountStat.even} ? 'even'">
-					<div class="card-title">Account code: <span th:text="${account.code}">12</span> </div>
-						<div class="card-data">
-							<div><b>Balance: </b><span th:text="${account.balance}">55.00</span>&euro;</div>
-						</div>
-						<a class="btn btn-purple btn-small btn-primary" th:href="@{/GoToAccountStatus(accountCode=${account.code})}">Open</a>
+	</div>
+	<div id="result-div" class="result-div">
+		<div id="confirmed-div" class="transfer-confirmed-div">
+			<img class="transfer-confirmed-image" src="resources/transfer_okay.png"/>
+			<div class="transfer-confirmed-title">Your transfer has been confirmed</div>
+			<div class="transfer-div">		
+				<div class="tranfer-source">
+					<div class="title">Source Account</div>
+					<div class="content">
+                        Owner Code: <b><span id="src-owner-code">3</span></b><br>
+                        Account Code: <b><span id="src-account-code">3</span></b><br>
+						Name: <b><span id="src-account-name">conto esempio 1</span></b><br>
+						New Balance: <b><span id="src-account-balance">34.56</span>&euro;</b>
 					</div>
-				<div class="card card-blue even">
-					<div class="card-title">Account code: 24</div>
-					<div class="card-data">
-						<div><b>Balance: </b><span>100254.00</span>&euro;</div>
-					</div>		
-					<a class="btn btn-purple btn-small btn-primary">Open</a>
 				</div>
-				<div class="card card-blue">
-					<div class="card-title">Account code: 56</div>
-					<div class="card-data">
-						<div><b>Code: </b><span>4434</span></div>
-						<div><b>Balance: </b><span>40000.00</span>&euro;</div>
+				<div class="transfer">
+					<img class="transfer-image" src="resources/transfer.png"/>
+					<div class="title">Transfer</div>
+					<div class="content">
+						Amount: <b><span id="transfer-amount">34.56</span>&euro;</b><br>
+						Reason: <b><span id="transfer-reason">salary</span></b>
 					</div>
-					<a class="btn btn-purple btn-small btn-primary">Open</a>
 				</div>
+				<div class="tranfer-destination">
+					<div class="title">Destination Account</div>
+					<div class="content">
+                        Owner Code: <b><span id="dest-owner-code">4</span></b><br>
+                        Account Code: <b><span id="dest-account-code">4</span></b><br>
+						Name: <b><span id="dest-account-name">conto esempio 2</span></b><br>
+						New Balance: <b><span id="dest-account-balance">40.56</span>&euro;</b>
+					</div>
+					<button id="add-contact" class="add-contact-button btn btn-purple btn-small btn-primary">Add to Address Book</button>
+                    <div id="add-contact-warning" class="warning-message">Warning message!</div>
+                </div>
 			</div>
+			<hr>
+			<a id="close-success" class="result-close">Close</a>
 		</div>
+		<div id="failed-div" class="transfer-failed-div">
+			<div class="transfer-failed-title">Your transfer has failed</div>
+			<div class="transfer-failed-reason">
+				The reason is: <b><span id="failed-reason">sample reason</span></b>
+			</div>
+			<hr>
+			<a id="close-failed" class="result-close">Close</a>
+		</div>
+	</div>
+	<div class="loading-div">
+		<div id="loading_msg" class="loading-message">Communicating with Server ...</div>
 	</div>
 </body>
 </html>
