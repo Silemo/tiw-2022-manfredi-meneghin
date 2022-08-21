@@ -1,6 +1,7 @@
 package it.polimi.tiw.projects.controllers;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,23 +14,22 @@ import java.sql.SQLException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
+import com.google.gson.Gson;
 
 import it.polimi.tiw.projects.beans.User;
 import it.polimi.tiw.projects.dao.UserDAO;
+import it.polimi.tiw.projects.packets.PacketUserInfo;
 import it.polimi.tiw.projects.utils.*;
 
 /**
  * Servlet implementation class Login
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"}, loadOnStartup = 1)
+@WebServlet("/Login")
+@MultipartConfig
 public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-	private TemplateEngine templateEngine;
-
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,7 +44,6 @@ public class Login extends HttpServlet {
     public void init() throws ServletException {
     	
     	ServletContext servletContext = getServletContext();
-		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
 		this.connection = ConnectionHandler.getConnection(servletContext);
     }
     
@@ -77,15 +76,16 @@ public class Login extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		// Verify if the given argument are null and if so forward to errorPage
+		// Verify if the given argument are null and if set to BAD_REQUEST Page
 		if(email == null || password == null) {
 			
-			forwardToErrorPage(request, response, "Null email or password");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Missing parameter");
 			return;
 		}
 		
 		// Query DB to authenticate user 
-		// If user not present, forward to ErrorPage
+		// If user not present, set to an INTERNAL_SERVER_ERROR
 		UserDAO userDAO = new UserDAO(connection);
 		User user = null;
 		
@@ -95,54 +95,29 @@ public class Login extends HttpServlet {
 			
 		} catch (SQLException e) {
 			
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return;
 		}
 		
 		// If the user exists, add info to the session and go to home page, otherwise
-		// show login page with error message
+		// set to UNAUTHORIZED
 		if(user == null) {
 			
-			request.setAttribute("warning", "Email or password incorrect!");
-			forward(request, response, PathHelper.goToLoginServletPath);
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("Email or password are incorrect");
 			return;
 		}
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("currentUser", user);
-		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
 		
-	}
-	
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
+		// JSON serialization
+		String packetUserInfo = new Gson().toJson(new PacketUserInfo(user.getName(), user.getId()));
 		
-		request.setAttribute("error", error);
-		forward(request, response, PathHelper.pathToErrorPage);
-		return;
-	}
-	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
-		
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		templateEngine.process(path, ctx, response.getWriter());
+		response.setStatus(HttpServletResponse.SC_OK);	
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().println(packetUserInfo);
 	}
 }

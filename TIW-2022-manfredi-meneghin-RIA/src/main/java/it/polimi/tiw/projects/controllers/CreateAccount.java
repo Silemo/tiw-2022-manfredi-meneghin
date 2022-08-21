@@ -7,29 +7,25 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-
 import it.polimi.tiw.projects.beans.User;
 import it.polimi.tiw.projects.dao.AccountDAO;
 import it.polimi.tiw.projects.utils.ConnectionHandler;
-import it.polimi.tiw.projects.utils.PathHelper;
-import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
  * Servlet implementation class CreateAccount
  */
 @WebServlet("/CreateAccount")
+@MultipartConfig
 public class CreateAccount extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private TemplateEngine templateEngine;
 	private Connection connection;
        
     /**
@@ -44,7 +40,6 @@ public class CreateAccount extends HttpServlet {
     public void init() throws ServletException {
     	
     	ServletContext servletContext = getServletContext();
-		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
 		this.connection = ConnectionHandler.getConnection(servletContext);
     }
 
@@ -62,7 +57,6 @@ public class CreateAccount extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Creates a new account for the user currently logged in
-		
 		HttpSession session = request.getSession(false);
 		User currentUser = (User)session.getAttribute("currentUser");
 		
@@ -77,43 +71,11 @@ public class CreateAccount extends HttpServlet {
 			
 		}catch (SQLException e) {
 			
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return;		
 		}
 		
-		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
-	}
-
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
-		
-		request.setAttribute("error", error);
-		forward(request, response, PathHelper.pathToErrorPage);
-		return;
-	}
-	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
-		
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		templateEngine.process(path, ctx, response.getWriter());
-		
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 }

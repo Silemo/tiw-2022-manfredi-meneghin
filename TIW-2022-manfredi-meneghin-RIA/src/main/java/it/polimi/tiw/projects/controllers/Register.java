@@ -8,13 +8,11 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.projects.utils.*;
 import it.polimi.tiw.projects.dao.AccountDAO;
@@ -26,11 +24,11 @@ import it.polimi.tiw.projects.beans.Account;
  * Servlet implementation class Register
  */
 @WebServlet("/Register")
+@MultipartConfig
 public class Register extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
-	private TemplateEngine templateEngine;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,7 +42,6 @@ public class Register extends HttpServlet {
     public void init() throws ServletException {
     	
     	ServletContext servletContext = getServletContext();
-		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
 		this.connection = ConnectionHandler.getConnection(servletContext);
     }
     
@@ -74,13 +71,15 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Tries to register the user, if the function returns null ends (registerUser already re-directed)
+		// Tries to register the user, if the function returns null ends (registerUser already set an error if it's the case)
 		if (registerUser(request, response) == null) {
 			return;
 		}
 		
-		// Once the user is registered is redirected to the LoginPage
-		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToLoginServletPath);
+		// Once the user is registered is redirected
+		
+		// TODO: Unsure if this works as I think it does
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	
@@ -107,23 +106,24 @@ public class Register extends HttpServlet {
 		// Verifies if all parameters are not null
 		if(name == null || surname == null || email == null || username == null || password == null || repeat_pwd == null) {
 					
-			forwardToErrorPage(request, response, "Register module missing some data");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Register module missing some data");
 			return null;
 		}
 				
 		// Checks if the inserted string (NAME) is of the correct length (1-45)
 		if (name.length() <= 0 || name.length() > 45) {
-					
-			request.setAttribute("warning", "Chosen name invalid (a valid name has more than one character and less than 45)!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Chosen name invalid (a valid name has more than one character and less than 45)!");
 			return null;
 		}
 				
 		// Checks if the inserted string (SURNAME) is of the correct length (1-45)
 		if (surname.length() <= 0 || surname.length() > 45) {
-					
-			request.setAttribute("warning", "Chosen surname invalid (a valid surname has more than one character and less than 45)!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Chosen surname invalid (a valid surname has more than one character and less than 45)!");
 			return null;
 		}
 				
@@ -132,32 +132,32 @@ public class Register extends HttpServlet {
 				
 		// If the string does not match the the user is redirected to the register page with an error message
 		if (!email.matches(emailRegEx)) {
-					
-			request.setAttribute("warning", "Chosen email invalid!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Chosen email invalid!");
 			return null;
 		}
 				
 		// Checks if the inserted string (USERNAME) is of the correct length (1-45)
 		if (username.length() <= 0 || username.length() > 45) {
-					
-			request.setAttribute("warning", "Chosen username invalid (a valid username has more than one character and less than 45)!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Chosen username invalid (a valid username has more than one character and less than 45)!");
 			return null;
 		}
 				
 		// Checks if the inserted strings (PASSWORD and REPEAT_PWD) are of the correct length (1-45) and equal
 		if (password.length() <= 0 || password.length() > 45 || !password.equals(repeat_pwd)) {
-					
-			request.setAttribute("warning", "Chosen password invalid (a valid password has more than one character and less than 45)!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Chosen password invalid (a valid password has more than one character and less than 45)!");
 			return null;
 		}
 				
 		if (!password.equals(repeat_pwd)) {
-					
-			request.setAttribute("warning", "Password and repeat password field not equal!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Password and repeat password field not equal!");
 			return null;
 		}
 				
@@ -174,14 +174,15 @@ public class Register extends HttpServlet {
 					
 		} catch (SQLException e) {
 					
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return null;	
 		}
 				
 		if(user != null) {
-					
-			request.setAttribute("warning", "Chosen email already in use!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("Chosen email already in use!");
 			return null;
 		}
 				
@@ -195,14 +196,15 @@ public class Register extends HttpServlet {
 					
 		} catch (SQLException e) {
 					
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return null;	
 		}
 				
 		if(user != null) {
-					
-			request.setAttribute("warning", "Chosen username already in use!");
-			forward(request, response, PathHelper.pathToRegisterPage);
+			
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("Chosen username already in use!");
 			return null;
 		}
 				
@@ -217,7 +219,8 @@ public class Register extends HttpServlet {
 			
 		} catch (SQLException e) {
 					
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return null;	
 		}
 				
@@ -229,13 +232,15 @@ public class Register extends HttpServlet {
 				
 		} catch (SQLException e) {
 					
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return null;	
 		}
 		
 		if(user == null) {
 			
-			forwardToErrorPage(request, response, "Error: user non correctly created - registerPage!");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error: user non correctly created - registerPage!");
 			return null;
 		}
 		
@@ -250,51 +255,18 @@ public class Register extends HttpServlet {
 								
 		} catch (SQLException e) {
 									
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return null;	
 		}
 				
 		if (accounts == null) {
-					
-			forwardToErrorPage(request, response, "Error: account non correctly created - registerPage!");
+			
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error: account non correctly created - registerPage!");
 			return null;
 		}
 		
 		return 0;
 	}
-	
-	
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
-		
-		request.setAttribute("error", error);
-		forward(request, response, PathHelper.pathToErrorPage);
-		return;
-	}
-	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
-		
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		templateEngine.process(path, ctx, response.getWriter());
-	}
-	
-	
 }
