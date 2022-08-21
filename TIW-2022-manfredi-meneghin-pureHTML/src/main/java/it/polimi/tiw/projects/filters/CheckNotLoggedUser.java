@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,10 +29,9 @@ public class CheckNotLoggedUser implements Filter {
 	private TemplateEngine templateEngine;
 
 	/**
-	 * @see HttpFilter#HttpFilter()
+	 * Default constructor.
 	 */
 	public CheckNotLoggedUser() {
-		super();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -54,16 +52,17 @@ public class CheckNotLoggedUser implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession s = req.getSession(false);
 
-		// System.out.println("not logged user filter activated");
 		if (s != null) {
+			
 			Object user = s.getAttribute("currentUser");
+			
 			if (user != null) {
+				
 				res.sendRedirect(request.getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
 				return;
 			}
 		}
 
-		// System.out.println("not logged user filter didn't find user");
 		chain.doFilter(request, response);
 	}
 
