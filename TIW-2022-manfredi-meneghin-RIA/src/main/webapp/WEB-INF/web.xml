@@ -3,7 +3,7 @@
     <display-name>TIW-project-pureHTML-onlineBanking</display-name>
   <context-param>
     <param-name>dbUrl</param-name>
-    <param-value>jdbc:mysql://localhost:3306/bankDB?serverTimezone=UTC</param-value>
+    <param-value>jdbc:mysql://localhost:3306/bankDB_RIA?serverTimezone=UTC</param-value>
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>
@@ -17,6 +17,7 @@
     <param-name>dbDriver</param-name>
     <param-value>com.mysql.cj.jdbc.Driver</param-value>
   </context-param>
+  
   <filter>
   	<filter-name>CheckLoggedUser</filter-name>
   	<filter-class>it.polimi.tiw.projects.filters.CheckLoggedUser</filter-class>
@@ -25,23 +26,34 @@
   	<filter-name>CheckNotLoggedUser</filter-name>
   	<filter-class>it.polimi.tiw.projects.filters.CheckNotLoggedUser</filter-class>
   </filter>
+  <filter>
+  	<filter-name>NoCacher</filter-name>
+  	<filter-class>filters.NoCacher</filter-class>
+  </filter>
+  
   <filter-mapping>
   	<filter-name>CheckLoggedUser</filter-name>
-  	<url-pattern>/GoToHome</url-pattern>
+    <url-pattern>/home.html</url-pattern>
+  	<url-pattern>/GetAccounts</url-pattern>
+  	<url-pattern>/GetContacts</url-pattern>
+  	<url-pattern>/AddContact</url-pattern>
   	<url-pattern>/CreateAccount</url-pattern>
-  	<url-pattern>/GoToAccountStatus</url-pattern>
-  	<url-pattern>/MakeTransfer</url-pattern>
-  	<url-pattern>/GoToTransferConfirmedPage</url-pattern>
+  	<url-pattern>/GetAccountDetails</url-pattern>
+  	<url-pattern>/MakeTransfer</url-pattern>	
   </filter-mapping>
   <filter-mapping>
   	<filter-name>CheckNotLoggedUser</filter-name>
-  	<url-pattern>/</url-pattern>
-  	<url-pattern>/GoToLoginPage</url-pattern>
+    <url-pattern>/login.html</url-pattern>
     <url-pattern>/Login</url-pattern>
-  	<url-pattern>/GoToRegisterPage</url-pattern>
   	<url-pattern>/Register</url-pattern>	
   </filter-mapping>
+  <filter-mapping>
+  	<filter-name>NoCacher</filter-name>
+    <url-pattern>/login.html</url-pattern>	
+    <url-pattern>/home.html</url-pattern>
+  </filter-mapping>
+  
   <welcome-file-list>
-    <welcome-file>GoToLoginPage</welcome-file>
+    <welcome-file>login.html</welcome-file>
   </welcome-file-list>
 </web-app>
