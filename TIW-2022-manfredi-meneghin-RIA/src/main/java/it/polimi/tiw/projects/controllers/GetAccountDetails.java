@@ -7,47 +7,45 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
+import com.google.gson.Gson;
 
 import it.polimi.tiw.projects.beans.Account;
 import it.polimi.tiw.projects.beans.Transfer;
 import it.polimi.tiw.projects.beans.User;
 import it.polimi.tiw.projects.dao.AccountDAO;
 import it.polimi.tiw.projects.dao.TransferDAO;
+import it.polimi.tiw.projects.packets.PacketAccountDetails;
 import it.polimi.tiw.projects.utils.ConnectionHandler;
-import it.polimi.tiw.projects.utils.PathHelper;
-import it.polimi.tiw.projects.utils.TemplateHandler;
 
 /**
- * Servlet implementation class GoToAccountStatus
+ * Servlet implementation class GetAccountDetails
  */
-@WebServlet("/GoToAccountStatus")
-public class GoToAccountStatus extends HttpServlet {
+@WebServlet("/GetAccountDetails")
+@MultipartConfig
+public class GetAccountDetails extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private TemplateEngine templateEngine;
 	private Connection connection;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GoToAccountStatus() {
-    	super();
-    	// TODO Auto-generated constructor stub
+    public GetAccountDetails() {
+        super();
+        // TODO Auto-generated constructor stub
     }
     
     @Override
     public void init() throws ServletException {
     	
     	ServletContext servletContext = getServletContext();
-		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
 		this.connection = ConnectionHandler.getConnection(servletContext);
     }
     
@@ -68,12 +66,14 @@ public class GoToAccountStatus extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Verifies if the given accountCode is valid, if not redirects to an error page
+		
 		String accountCodeString = request.getParameter("accountCode");
 		
-		if(accountCodeString == null) {
+		if (accountCodeString == null) {
 			
-			forwardToErrorPage(request, response, "Null account code, when accessing account details");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Missing parameter in the request to get the accountDetails");
+			return;
 		}
 		
 		int accountCode;
@@ -81,18 +81,17 @@ public class GoToAccountStatus extends HttpServlet {
 		try {
 			
 			accountCode = Integer.parseInt(accountCodeString);
-			
+		
 		} catch (NumberFormatException e) {
 			
-			forwardToErrorPage(request, response, "Chosen account code is not a number, when accessing account details");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
+			response.getWriter().println("Parameter in get account details request is not an integer");
 			return;
 		}
 		
-		// Gets the currentUser from the session
 		HttpSession session = request.getSession(false);
 		User currentUser = (User)session.getAttribute("currentUser");
 		
-		// Gets the account selected by its code and then verifies if it exists and belongs to the current user
 		AccountDAO accountDAO = new AccountDAO(connection);
 		Account account;
 		
@@ -102,17 +101,18 @@ public class GoToAccountStatus extends HttpServlet {
 			
 		} catch (SQLException e) {
 			
-			forwardToErrorPage(request, response, e.getMessage());
-			return;		
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
+			return;	
 		}
 		
-		if(account == null || account.getUserId() != currentUser.getId()) {
+		if (account == null || account.getUserId() != currentUser.getId()) {
 			
-			forwardToErrorPage(request, response, "Account not existing or not yours");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);		
+			response.getWriter().println("The account doesn't exist or is not yours");
 			return;
 		}
 		
-		// Gets the list of transfers on the account, if the operation is successful saves them in the request and redirects
 		List<Transfer> transfers;
 		TransferDAO transferDAO = new TransferDAO(connection);
 		
@@ -122,13 +122,16 @@ public class GoToAccountStatus extends HttpServlet {
 			
 		} catch (SQLException e) {
 			
-			forwardToErrorPage(request, response, e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return;	
 		}
 		
-		request.setAttribute("account", account);
-		request.setAttribute("transfers", transfers);
-		forward(request, response, PathHelper.pathToAccountStatusPage);
+		String json = new Gson().toJson(new PacketAccountDetails(account, transfers));
+		
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
 	}
 
 	/**
@@ -138,37 +141,5 @@ public class GoToAccountStatus extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
-		
-		request.setAttribute("error", error);
-		forward(request, response, PathHelper.pathToErrorPage);
-		return;
-	}
-	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
-		
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		templateEngine.process(path, ctx, response.getWriter());
-		
-	}
+
 }
