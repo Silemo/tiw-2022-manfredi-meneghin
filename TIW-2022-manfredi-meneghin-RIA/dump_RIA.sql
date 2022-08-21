@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS `bankDB`;
-CREATE DATABASE  IF NOT EXISTS `bankDB` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `bankDB`;
+DROP DATABASE IF EXISTS `bankDB_RIA`;
+CREATE DATABASE  IF NOT EXISTS `bankDB_RIA` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bankDB_RIA`;
 -- MySQL dump 10.13  Distrib 8.0.28, for macos11 (x86_64)
 --
 -- Host: 127.0.0.1    Database: bankDB
@@ -43,6 +43,32 @@ LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` VALUES (1,1,1000.05),(2,2,2000.99),(3,3,1000000.85),(4,3,2000000.95),(5,1,285.60),(6,4,4000);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contact`
+--
+
+DROP TABLE IF EXISTS `contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contact` (
+  `owner_id` INT UNSIGNED NOT NULL,
+  `contact_account` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`owner_id`, `contact_account`),
+  CONSTRAINT `contact_owner_id_fk` FOREIGN KEY (`owner_id`) REFERENCES `bankDB`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `contact_contact_account_fk` FOREIGN KEY (`contact_account`) REFERENCES `bankDB`.`account` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contact`
+--
+
+LOCK TABLES `contact` WRITE;
+/*!40000 ALTER TABLE `contact` DISABLE KEYS */;
+INSERT INTO `contact` VALUES (4,1),(3,1),(1,4);
+/*!40000 ALTER TABLE `contact` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
