@@ -33,7 +33,7 @@ public class AccountDAO {
 	public Account findAccountByCode(int code) throws SQLException {
 
 		Account account = null;
-		String performedAction = " finding an account by code";
+		String performedAction = " finding an account by code ";
 		String query = "SELECT * FROM account WHERE code = ?";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -54,7 +54,7 @@ public class AccountDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -64,7 +64,7 @@ public class AccountDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -73,7 +73,7 @@ public class AccountDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -92,7 +92,7 @@ public class AccountDAO {
 	public List<Account> findAccountsByUserId(int user_id) throws SQLException {
 
 		List<Account> accounts = new ArrayList<>();
-		String performedAction = " finding accounts by user_id";
+		String performedAction = " finding accounts by user_id ";
 		String query = "SELECT * FROM account WHERE user_id = ? ORDER BY code ASC";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -114,7 +114,7 @@ public class AccountDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -125,7 +125,7 @@ public class AccountDAO {
 			} catch (Exception e) {
 
 				throw new SQLException(
-						"Error closing the result set when" + performedAction + "[" + e.getMessage() + "]");
+						"Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -134,7 +134,7 @@ public class AccountDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -150,7 +150,7 @@ public class AccountDAO {
 	 */
 	public void createAccount(int user_id) throws SQLException {
 
-		String performedAction = " creating a new bank account in the database";
+		String performedAction = " creating a new bank account in the database ";
 		String queryAddUser = "INSERT INTO account (user_id) VALUES(?)";
 		PreparedStatement preparedStatementAddUser = null;
 
@@ -162,7 +162,7 @@ public class AccountDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -172,7 +172,7 @@ public class AccountDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 	}
@@ -187,7 +187,7 @@ public class AccountDAO {
 	 */
 	public void createAccount(int user_id, BigDecimal balance) throws SQLException {
 
-		String performedAction = " creating a new bank account in the database";
+		String performedAction = " creating a new bank account in the database ";
 		String queryAddAccount = "INSERT INTO account (user_id, balance) VALUES(?,?)";
 		PreparedStatement preparedStatementAddAccount = null;
 
@@ -200,7 +200,7 @@ public class AccountDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -210,7 +210,7 @@ public class AccountDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 	}

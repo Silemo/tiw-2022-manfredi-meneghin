@@ -33,7 +33,7 @@ public class UserDAO {
 	public User findUser(String email, String password) throws SQLException {
 
 		User user = null;
-		String performedAction = " finding a user by email and password";
+		String performedAction = " finding a user by email and password ";
 		String query = "SELECT * FROM user WHERE email = ? AND password = ?";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -57,7 +57,7 @@ public class UserDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -67,7 +67,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -76,7 +76,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -94,7 +94,7 @@ public class UserDAO {
 	public User findUserById(int id) throws SQLException {
 
 		User user = null;
-		String performedAction = " finding a user by id";
+		String performedAction = " finding a user by id ";
 		String query = "SELECT * FROM user WHERE id = ?";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -117,7 +117,7 @@ public class UserDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -127,7 +127,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -136,7 +136,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -154,7 +154,7 @@ public class UserDAO {
 	public User findUserByEmail(String email) throws SQLException {
 
 		User user = null;
-		String performedAction = " finding a user by email";
+		String performedAction = " finding a user by email ";
 		String query = "SELECT * FROM user WHERE email = ?";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -177,7 +177,7 @@ public class UserDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -187,7 +187,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -196,7 +196,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -214,7 +214,7 @@ public class UserDAO {
 	public User findUserByUsername(String username) throws SQLException {
 
 		User user = null;
-		String performedAction = " finding a user by username";
+		String performedAction = " finding a user by username ";
 		String query = "SELECT * FROM user WHERE username = ?";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -237,7 +237,7 @@ public class UserDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -247,7 +247,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -256,7 +256,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -264,7 +264,7 @@ public class UserDAO {
 	}
 
 	/**
-	 * Creates a new User in the bank database In case of error raises an
+	 * Creates a new User in the bank database. In case of error raises an
 	 * SQLException
 	 * 
 	 * @param name     the user's name
@@ -277,7 +277,7 @@ public class UserDAO {
 	public void createUser(String name, String surname, String email, String username, String password)
 			throws SQLException {
 
-		String performedAction = " creating a new user in the database";
+		String performedAction = " creating a new user in the database ";
 		String queryAddUser = "INSERT INTO user (name,surname,email,username,password) VALUES(?,?,?,?,?)";
 		PreparedStatement preparedStatementAddUser = null;
 
@@ -303,7 +303,7 @@ public class UserDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 	}
@@ -322,7 +322,7 @@ public class UserDAO {
 	 */
 	public void registerUser(String name, String surname, String email, String username, String password) throws SQLException {
 
-		String performedAction = " registering a new user in the database";
+		String performedAction = " registering a new user in the database ";
 		String queryAddUser = "INSERT INTO user (name,surname,email,username,password) VALUES(?,?,?,?,?)";
 		AccountDAO accountDAO = new AccountDAO(connection);
 		PreparedStatement preparedStatementAddUser = null;
@@ -397,7 +397,7 @@ public class UserDAO {
 	 */
 	public void registerUser(String name, String surname, String email, String username, String password, BigDecimal balance) throws SQLException {
 
-		String performedAction = " registering a new user in the database";
+		String performedAction = " registering a new user in the database ";
 		String queryAddUser = "INSERT INTO user (name,surname,email,username,password) VALUES(?,?,?,?,?)";
 		AccountDAO accountDAO = new AccountDAO(connection);
 		PreparedStatement preparedStatementAddUser = null;
