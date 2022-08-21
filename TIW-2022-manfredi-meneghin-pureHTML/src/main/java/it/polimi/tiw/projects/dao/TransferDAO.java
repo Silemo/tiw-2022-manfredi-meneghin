@@ -35,7 +35,7 @@ public class TransferDAO {
 	public List<Transfer> findTransfersByAccountCode(int code) throws SQLException {
 
 		List<Transfer> transfers = new ArrayList<>();
-		String performedAction = " finding transfers by account code";
+		String performedAction = " finding transfers by account code ";
 		String query = "SELECT * FROM transfer WHERE account_code_orderer = ? OR account_code_beneficiary = ? ORDER BY timestamp DESC";
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -60,7 +60,7 @@ public class TransferDAO {
 
 		} catch (SQLException e) {
 
-			throw new SQLException("Error accessing the DB when" + performedAction);
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 
 		} finally {
 
@@ -70,7 +70,7 @@ public class TransferDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the result set when" + performedAction);
+				throw new SQLException("Error closing the result set when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 
 			try {
@@ -79,7 +79,7 @@ public class TransferDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction);
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 
@@ -99,7 +99,7 @@ public class TransferDAO {
 	public void createTransfer(int account_code_orderer, int account_code_beneficiary, BigDecimal amount, String reason)
 			throws SQLException {
 
-		String performedAction = " creating a new transfer";
+		String performedAction = " creating a new transfer ";
 		String transactionInsert;
 		String transactionUpdateSource;
 		String transactionUpdateDest;
@@ -142,7 +142,7 @@ public class TransferDAO {
 			// If an SQLException is raised a roll-back to the last commit is needed
 			connection.rollback();
 
-			throw new SQLException("Error accessing the DB when" + performedAction + " [ "+e.getMessage()+"] ");
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ "+ e.getMessage() + " ]");
 
 		} finally {
 			// When the transaction is completed (successfully or not) we need to resume the
@@ -157,7 +157,7 @@ public class TransferDAO {
 
 			} catch (Exception e) {
 
-				throw new SQLException("Error closing the statement when" + performedAction + " [ "+e.getMessage()+"] ");
+				throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
 		}
 	}
