@@ -20,7 +20,7 @@
 			<div class="tranfer-source">
 				<div class="title">Source Account</div>
 				<div class="content">
-					Owner Code: <span th:text=${session.sourceAccount.getUserId()}>3</span><br>
+					Owner Id: <span th:text=${session.sourceAccount.getUserId()}>3</span><br>
 					Account Code: <span th:text=${session.sourceAccount.code}>3</span><br>
 					New Balance: <span th:text=${session.sourceAccount.balance}>34.56</span>&euro;
 				</div>
@@ -35,7 +35,7 @@
 			<div class="tranfer-destination">
 				<div class="title">Destination Account</div>
 				<div class="content">
-					Owner Code: <span th:text=${session.destAccount.getUserId()}>4</span><br>
+					Owner Id: <span th:text=${session.destAccount.getUserId()}>4</span><br>
 					Account Code: <span th:text=${session.destAccount.code}>4</span><br>
 					New Balance:  <span th:text=${session.destAccount.balance}>40.56</span>&euro;
 				</div>
