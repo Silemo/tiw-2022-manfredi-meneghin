@@ -19,8 +19,8 @@ html, body{
 	position: absolute; 
     right: 1rem;
     top: 1rem;
-	min-width: 200px; 
-	height: 150px; 
+	min-width: 180px;
+    height: 116px; 
 	background-color: #fafafa; 
     border: solid 2px #7952b3; 
     border-radius: 20px;
@@ -33,7 +33,10 @@ html, body{
 }
 .header-buttons{
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* place children in columns */
+    margin: 0 auto; /* auto left-right border, others default */
+    margin-top: 0.4rem;
+    max-width: 70%;
 }
 .header-buttons span {
     margin-top: 10px;
@@ -60,7 +63,7 @@ hr{
 */
 .btn{
     text-align: center;
-    vertical-align: middle;
+    vertical-align: middle; /* placed in the middle of the parent element */
     border-radius: 5px;
     border-style: solid;
 }
@@ -83,18 +86,6 @@ hr{
     color: #fff;
     background-color: #7952b3;
     border-color: #7952b3;
-    cursor: pointer;
-}
-.btn-navy{
-    color: #fff;
-    background-color: #005366;
-    border-color: #005366;
-    cursor: pointer;
-}
-.btn-blue{
-    color: #fff;
-    background-color: #0f8ba8;
-    border-color: #0f8ba8;
     cursor: pointer;
 }
 .btn-inverted-purple{
@@ -144,22 +135,8 @@ hr{
     Colored divs
 */
 .purple-div{
-    margin: 0 auto;
+    margin: 0 auto; /* center horizontally */
     border: 2px solid #6f42c1;
-    border-radius: 20px;
-    box-shadow: 0 1rem 3rem rgba(0,0,0,0.175); /* x-offset y-offset radius color */
-    padding: 1rem;
-}
-.navy-div{
-    margin: 0 auto;
-    border: 2px solid #005366;
-    border-radius: 20px;
-    box-shadow: 0 1rem 3rem rgba(0,0,0,0.175); /* x-offset y-offset radius color */
-    padding: 1rem;
-}
-.blue-div{
-    margin: 0 auto;
-    border: 2px solid #0f8ba8;
     border-radius: 20px;
     box-shadow: 0 1rem 3rem rgba(0,0,0,0.175); /* x-offset y-offset radius color */
     padding: 1rem;
@@ -188,7 +165,7 @@ hr{
     right: 1rem;
 }
 .card-title{
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1.2rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -243,10 +220,4 @@ hr{
 }
 .linked-card-blue:last-child{
     border-bottom: 1px solid #17a2b8;
-}
-/*
-    Warning
-*/
-.warning-message{
-    color: #e74a3b;
 }
