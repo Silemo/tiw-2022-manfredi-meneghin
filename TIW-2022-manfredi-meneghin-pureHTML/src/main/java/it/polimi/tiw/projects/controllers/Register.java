@@ -1,7 +1,7 @@
 package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+// import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -207,13 +207,14 @@ public class Register extends HttpServlet {
 		}
 				
 		// TODO: remove BigDecimal and balance (account should be initialized at 0)
-		BigDecimal balance = new BigDecimal(10);
+		// BigDecimal balance = new BigDecimal(10);
 		
 		// Creates the submitted user in the DB
 		// If error are generated everything is forwarded to an errorPage
 		try {
 					
-			userDAO.registerUser(name, surname, email, username, password, balance);
+			// userDAO.registerUser(name, surname, email, username, password, balance);
+			userDAO.registerUser(name, surname, email, username, password);
 			
 		} catch (SQLException e) {
 					

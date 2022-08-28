@@ -1,7 +1,7 @@
 package it.polimi.tiw.projects.controllers;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+// import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -69,11 +69,12 @@ public class CreateAccount extends HttpServlet {
 		AccountDAO accountDAO = new AccountDAO(connection);
 		
 		// TODO: remove BigDecimal and balance (account should be initialized at 0)
-		BigDecimal balance = new BigDecimal(10);
+		// BigDecimal balance = new BigDecimal(10);
 		
 		try {
 			
-			accountDAO.createAccount(currentUser.getId(), balance);
+			// accountDAO.createAccount(currentUser.getId(), balance);
+			accountDAO.createAccount(currentUser.getId());
 			
 		}catch (SQLException e) {
 			
