@@ -5,7 +5,7 @@ import it.polimi.tiw.projects.beans.Transfer;
 
 /**
  * Support class for JSON serialization - collects the informations regarding a Transfer
- * Used in TODO: write smth
+ * Used in MakeTransfer
  */
 public class PacketTransferInfo {
 	

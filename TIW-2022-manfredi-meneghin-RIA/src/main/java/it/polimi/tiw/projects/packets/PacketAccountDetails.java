@@ -7,7 +7,7 @@ import it.polimi.tiw.projects.beans.Transfer;
 
 /**
  * Support class for JSON serialization - collects the informations shown in the AccountDetails
- * Used in TODO: write smth
+ * Used in GetAccountDetails
  */
 public class PacketAccountDetails {
 	
