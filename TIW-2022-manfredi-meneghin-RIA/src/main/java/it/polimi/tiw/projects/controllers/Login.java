@@ -73,7 +73,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String email = request.getParameter("email");
+		String email    = request.getParameter("email");
 		String password = request.getParameter("password");
 		
 		// Verify if the given argument are null and if set to BAD_REQUEST Page
@@ -87,7 +87,7 @@ public class Login extends HttpServlet {
 		// Query DB to authenticate user 
 		// If user not present, set to an INTERNAL_SERVER_ERROR
 		UserDAO userDAO = new UserDAO(connection);
-		User user = null;
+		User    user    = null;
 		
 		try {
 			
@@ -113,7 +113,7 @@ public class Login extends HttpServlet {
 		session.setAttribute("currentUser", user);
 		
 		// JSON serialization
-		String packetUserInfo = new Gson().toJson(new PacketUserInfo(user.getName(), user.getId()));
+		String packetUserInfo = new Gson().toJson(new PacketUserInfo(user.getId(), user.getName(), user.getUsername()));
 		
 		response.setStatus(HttpServletResponse.SC_OK);	
 		response.setContentType("application/json");
