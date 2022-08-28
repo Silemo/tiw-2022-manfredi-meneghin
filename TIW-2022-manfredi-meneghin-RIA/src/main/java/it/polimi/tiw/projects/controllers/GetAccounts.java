@@ -65,11 +65,11 @@ public class GetAccounts extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User) session.getAttribute("currentUser");
 		
 		AccountDAO accountDAO = new AccountDAO(connection);
 		List<Account> theirAccounts;
-		
+		// Gets the account of the user from the DB
 		try {
 			
 			theirAccounts = accountDAO.findAccountsByUserId(currentUser.getId());
@@ -80,7 +80,7 @@ public class GetAccounts extends HttpServlet {
 			response.getWriter().println(e.getMessage());
 			return;
 		}
-		
+		// Sends the accountList to the client, serializing it using JSON
 		String json = new Gson().toJson(theirAccounts);
 		
 		response.setContentType("application/json");

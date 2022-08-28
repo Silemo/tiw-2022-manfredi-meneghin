@@ -68,7 +68,7 @@ public class GetAccountDetails extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String accountCodeString = request.getParameter("accountCode");
-		
+		// Verifies if the string is null, if so sets a BAD_REQUEST response
 		if (accountCodeString == null) {
 			
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
@@ -77,7 +77,7 @@ public class GetAccountDetails extends HttpServlet {
 		}
 		
 		int accountCode;
-		
+		// Tries to parse the accountCode number. If unable sets a BAD_REQUEST response
 		try {
 			
 			accountCode = Integer.parseInt(accountCodeString);
@@ -88,13 +88,13 @@ public class GetAccountDetails extends HttpServlet {
 			response.getWriter().println("Parameter in get account details request is not an integer");
 			return;
 		}
-		
+		// Gets the user from the session
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User)session.getAttribute("currentUser");
 		
 		AccountDAO accountDAO = new AccountDAO(connection);
 		Account account;
-		
+		// Gets the account by its code
 		try {
 			
 			account = accountDAO.findAccountByCode(accountCode);
@@ -105,7 +105,7 @@ public class GetAccountDetails extends HttpServlet {
 			response.getWriter().println(e.getMessage());
 			return;	
 		}
-		
+		// Verifies if the account is not null and belongs to the user in the session, if otherwise sets an UNAUTHORIZED response
 		if (account == null || account.getUserId() != currentUser.getId()) {
 			
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);		
@@ -115,7 +115,7 @@ public class GetAccountDetails extends HttpServlet {
 		
 		List<Transfer> transfers;
 		TransferDAO transferDAO = new TransferDAO(connection);
-		
+		// Finds all the transfer related to the selected account
 		try {
 			
 			transfers = transferDAO.findTransfersByAccountCode(accountCode);
@@ -126,7 +126,7 @@ public class GetAccountDetails extends HttpServlet {
 			response.getWriter().println(e.getMessage());
 			return;	
 		}
-		
+		// Sends the PacketAccountDetails to the client, serializing it using JSON
 		String json = new Gson().toJson(new PacketAccountDetails(account, transfers));
 		
 		response.setContentType("application/json");

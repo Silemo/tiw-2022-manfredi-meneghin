@@ -64,11 +64,11 @@ public class GetContacts extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User) session.getAttribute("currentUser");
 		
 		AddressBookDAO addressBookDAO = new AddressBookDAO(connection);
 		AddressBook addressBook;
-		
+		// Gets the addressBook from the DB
 		try {
 			
 			addressBook = addressBookDAO.findAddressBookByOwnerId(currentUser.getId());
@@ -79,7 +79,7 @@ public class GetContacts extends HttpServlet {
 			response.getWriter().println(e.getMessage());
 			return;
 		}
-		
+		// Sends the addressBook to the client, serializing it using JSON
 		String json = new Gson().toJson(addressBook.getContacts());
 		
 		response.setContentType("application/json");
