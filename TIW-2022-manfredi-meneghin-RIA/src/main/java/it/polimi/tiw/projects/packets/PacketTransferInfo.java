@@ -9,8 +9,8 @@ import it.polimi.tiw.projects.beans.Transfer;
  */
 public class PacketTransferInfo {
 	
-	private Account sourceAccount;
-	private Account destAccount;
+	private Account  sourceAccount;
+	private Account  destAccount;
 	private Transfer transfer;
 	
 	/**

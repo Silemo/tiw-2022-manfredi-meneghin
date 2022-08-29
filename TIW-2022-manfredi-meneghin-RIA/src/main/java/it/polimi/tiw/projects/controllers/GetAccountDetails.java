@@ -115,7 +115,7 @@ public class GetAccountDetails extends HttpServlet {
 		
 		List<Transfer> transfers;
 		TransferDAO transferDAO = new TransferDAO(connection);
-		// Finds all the transfer related to the selected account
+		// Finds all the transfers related to the selected account
 		try {
 			
 			transfers = transferDAO.findTransfersByAccountCode(accountCode);
@@ -129,6 +129,7 @@ public class GetAccountDetails extends HttpServlet {
 		// Sends the PacketAccountDetails to the client, serializing it using JSON
 		String json = new Gson().toJson(new PacketAccountDetails(account, transfers));
 		
+		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);

@@ -80,7 +80,6 @@ public class Register extends HttpServlet {
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	
 	/**
 	 * Verifies the input and if it is correct creates the user in the DB and an account of the user. 
 	 * If the operation is successful returns 0, else returns null

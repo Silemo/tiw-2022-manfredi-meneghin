@@ -11,7 +11,7 @@ import it.polimi.tiw.projects.beans.Transfer;
  */
 public class PacketAccountDetails {
 	
-	private Account account;
+	private Account        account;
 	private List<Transfer> transfers;
 	
 	/**
@@ -22,7 +22,7 @@ public class PacketAccountDetails {
 	 */
 	public PacketAccountDetails(Account account, List<Transfer> transfers){
 		
-		this.account = account;
+		this.account   = account;
 		this.transfers = transfers;
 	}
 	
