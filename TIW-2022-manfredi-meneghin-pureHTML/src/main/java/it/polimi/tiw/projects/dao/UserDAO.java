@@ -342,20 +342,18 @@ public class UserDAO {
 			preparedStatementAddUser.setString(5, password);
 			preparedStatementAddUser.executeUpdate();
 
-			try (ResultSet rs = preparedStatementAddUser.getGeneratedKeys()) {
+			ResultSet rs = preparedStatementAddUser.getGeneratedKeys();
 
-				if (rs.first()) {
+			if (rs.first()) {
+				// retrieve userID
+				user_id = rs.getInt(1); 
 
-					user_id = rs.getInt(1); // retrieve userID
+				// Second operation - Create account in the account table
+				accountDAO.createAccount(user_id);
+				
+			} else {
 
-					// Second operation - Create account in the account table
-					accountDAO.createAccount(user_id);
-				}
-
-				else {
-
-					throw new SQLException("Creating user failed, no ID obtained.");
-				}
+				throw new SQLException("Creating user failed, no ID obtained.");
 			}
 
 			// Commit the whole transaction
@@ -420,8 +418,8 @@ public class UserDAO {
 			ResultSet rs = preparedStatementAddUser.getGeneratedKeys();
 
 			if (rs.first()) {
-
-				user_id = rs.getInt(1); // retrieve userID
+				// retrieve userID
+				user_id = rs.getInt(1); 
 
 				// Second operation - Create account in the account table
 				accountDAO.createAccount(user_id, balance);

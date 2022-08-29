@@ -23,7 +23,7 @@ import it.polimi.tiw.projects.utils.*;
 /**
  * Servlet implementation class Login
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"}, loadOnStartup = 1)
+@WebServlet("/Login")
 public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -74,7 +74,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String email = request.getParameter("email");
+		String email    = request.getParameter("email");
 		String password = request.getParameter("password");
 		
 		// Verify if the given argument are null and if so forward to errorPage
@@ -87,7 +87,7 @@ public class Login extends HttpServlet {
 		// Query DB to authenticate user 
 		// If user not present, forward to ErrorPage
 		UserDAO userDAO = new UserDAO(connection);
-		User user = null;
+		User    user    = null;
 		
 		try {
 			
@@ -111,7 +111,6 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setAttribute("currentUser", user);
 		response.sendRedirect(getServletContext().getContextPath() + PathHelper.goToHomeServletPath);
-		
 	}
 	
 	/**

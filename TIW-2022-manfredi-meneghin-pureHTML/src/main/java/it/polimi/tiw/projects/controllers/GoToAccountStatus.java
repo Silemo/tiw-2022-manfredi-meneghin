@@ -90,7 +90,7 @@ public class GoToAccountStatus extends HttpServlet {
 		
 		// Gets the currentUser from the session
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User)session.getAttribute("currentUser");
 		
 		// Gets the account selected by its code and then verifies if it exists and belongs to the current user
 		AccountDAO accountDAO = new AccountDAO(connection);

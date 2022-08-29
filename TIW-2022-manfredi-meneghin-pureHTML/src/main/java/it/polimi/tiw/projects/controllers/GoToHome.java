@@ -68,7 +68,7 @@ public class GoToHome extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Gets the current user from the session
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User)session.getAttribute("currentUser");
 		
 		// Gets the accounts that belong to the user, if the operation is successful saves them in the request and then redirects
 		AccountDAO bankAccountDAO = new AccountDAO(connection);

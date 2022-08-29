@@ -62,9 +62,8 @@ public class CreateAccount extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Creates a new account for the user currently logged in
-		
 		HttpSession session = request.getSession(false);
-		User currentUser = (User)session.getAttribute("currentUser");
+		User currentUser    = (User)session.getAttribute("currentUser");
 		
 		AccountDAO accountDAO = new AccountDAO(connection);
 		

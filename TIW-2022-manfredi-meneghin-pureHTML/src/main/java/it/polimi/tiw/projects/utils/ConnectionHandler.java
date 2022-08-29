@@ -17,9 +17,9 @@ public class ConnectionHandler {
 		
 		try {
 
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
+			String driver   = context.getInitParameter("dbDriver");
+			String url      = context.getInitParameter("dbUrl");
+			String user     = context.getInitParameter("dbUser");
 			String password = context.getInitParameter("dbPassword");
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, user, password);
