@@ -180,7 +180,7 @@ hr{
     margin-top: 0.25rem;
 }
 .card-blue{
-    border: 1px solid #17a2b8;
+    border: 1px solid #749c93;
 }
 /*
     Linked card
@@ -217,14 +217,14 @@ hr{
     top: 60px;
     right: 1rem;
 }
-/* Blue version */
+/* Granny Smith version */
 .linked-card-blue{
-    border: 1px solid #17a2b8;
+    border: 1px solid #749c93;
     border-bottom: none; /* need to reset the bottom border, otherwise consecutive cards would have double borders */
 }
 .linked-card-blue + .linked-card-blue{
-    border-top: 1px dashed #17a2b8;
+    border-top: 1px dashed #749c93;
 }
 .linked-card-blue:last-child{
-    border-bottom: 1px solid #17a2b8;
+    border-bottom: 1px solid #749c93;
 }
