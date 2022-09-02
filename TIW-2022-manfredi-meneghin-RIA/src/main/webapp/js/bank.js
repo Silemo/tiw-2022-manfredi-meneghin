@@ -63,23 +63,27 @@
             );
             // TransferResult component
             transferResult = new TransferResult({
-                "result_div"                : document.getElementById("result-div"),
-                "confirmed_div"             : document.getElementById("confirmed-div"),
-                "failed_div"                : document.getElementById("failed-div"),
-                "src_account_code_span"     : document.getElementById("src-account-code"),
-                "src_owner_id_span"         : document.getElementById("src-owner-id"),
-                "src_account_balance_span"  : document.getElementById("src-account-balance"),
-                "transfer_amount_span"      : document.getElementById("transfer-amount"),
-                "transfer_reason_span"      : document.getElementById("transfer-reason"),
-                "dest_account_code_span"    : document.getElementById("dest-account-code"),
-                "dest_owner_id_span"        : document.getElementById("dest-owner-id"),
-                "dest_account_balance_span" : document.getElementById("dest-account-balance"),
-                "failed_reason_span"        : document.getElementById("failed-reason"),
-                "close_success_button"      : document.getElementById("close-success"),
-                "close_failed_button"       : document.getElementById("close-failed")
+	
+                "result_div"                    : document.getElementById("result-div"),
+                "confirmed_div"                 : document.getElementById("confirmed-div"),
+                "failed_div"                    : document.getElementById("failed-div"),
+                "src_account_code_span"         : document.getElementById("src-account-code"),
+                "src_owner_id_span"             : document.getElementById("src-owner-id"),
+                "src_account_balance_old_span"  : document.getElementById("src-account-balance-old"),
+                "src_account_balance_span"      : document.getElementById("src-account-balance"),
+                "transfer_amount_span"          : document.getElementById("transfer-amount"),
+                "transfer_reason_span"          : document.getElementById("transfer-reason"),
+                "dest_account_code_span"        : document.getElementById("dest-account-code"),
+                "dest_owner_id_span"            : document.getElementById("dest-owner-id"),
+                "dest_account_balance_old_span" : document.getElementById("dest-account-balance-old"),
+                "dest_account_balance_span"     : document.getElementById("dest-account-balance"),
+                "failed_reason_span"            : document.getElementById("failed-reason"),
+                "close_success_button"          : document.getElementById("close-success"),
+                "close_failed_button"           : document.getElementById("close-failed")
             });
 			// AddressBook component
             addressBook = new AddressBook(
+	
                 document.getElementById("add-contact"), 
                 document.getElementById("dest-owner-id"), 
                 document.getElementById("dest-account-code"), 
@@ -547,7 +551,7 @@
             var self = this;
             makeCall("GET", 'GetAccountDetails?accountCode=' + accountCode, null, (req) => {
 	
-                switch(req.status){
+                switch(req.status) {
 	
                     case 200: //ok
                         var data = JSON.parse(req.responseText);
@@ -675,20 +679,22 @@
 	 */
     function TransferResult(options){
         //Saves html elements in scope
-        this.result_div                = options["result_div"];
-        this.confirmed_div             = options["confirmed_div"];
-        this.failed_div                = options["failed_div"];
-        this.src_account_code_span     = options["src_account_code_span"];
-        this.src_owner_id_span         = options["src_owner_id_span"];
-        this.src_account_balance_span  = options["src_account_balance_span"];
-        this.transfer_amount_span      = options["transfer_amount_span"];
-        this.transfer_reason_span      = options["transfer_reason_span"];
-        this.dest_account_code_span    = options["dest_account_code_span"];
-        this.dest_owner_id_span        = options["dest_owner_id_span"];
-        this.dest_account_balance_span = options["dest_account_balance_span"];
-        this.failed_reason_span        = options["failed_reason_span"];
-        this.close_success_button      = options["close_success_button"];
-        this.close_failed_button       = options["close_failed_button"];
+        this.result_div                    = options["result_div"];
+        this.confirmed_div                 = options["confirmed_div"];
+        this.failed_div                    = options["failed_div"];
+        this.src_account_code_span         = options["src_account_code_span"];
+        this.src_owner_id_span             = options["src_owner_id_span"];
+        this.src_account_balance_old_span  = options["src_account_balance_old_span"];
+        this.src_account_balance_span      = options["src_account_balance_span"];
+        this.transfer_amount_span          = options["transfer_amount_span"];
+        this.transfer_reason_span          = options["transfer_reason_span"];
+        this.dest_account_code_span        = options["dest_account_code_span"];
+        this.dest_owner_id_span            = options["dest_owner_id_span"];
+        this.dest_account_balance_old_span = options["dest_account_balance_old_span"];
+        this.dest_account_balance_span     = options["dest_account_balance_span"];
+        this.failed_reason_span            = options["failed_reason_span"];
+        this.close_success_button          = options["close_success_button"];
+        this.close_failed_button           = options["close_failed_button"];
 
         //Setups listeners
         this.close_success_button.addEventListener("click", e => {
@@ -706,14 +712,16 @@
 		 */
         this.showSuccess = function(srcAccount, transfer, destAccount) {
             //Update spans
-            this.src_account_code_span.textContent     = srcAccount.code;
-            this.src_owner_id_span.textContent         = srcAccount.user_id;
-            this.src_account_balance_span.textContent  = srcAccount.balance;
-            this.transfer_amount_span.textContent      = transfer.amount;
-            this.transfer_reason_span.textContent      = transfer.reason;
-            this.dest_account_code_span.textContent    = destAccount.code;
-            this.dest_owner_id_span.textContent        = destAccount.user_id;
-            this.dest_account_balance_span.textContent = destAccount.balance;
+            this.src_account_code_span.textContent         = srcAccount.code;
+            this.src_owner_id_span.textContent             = srcAccount.user_id;
+            this.src_account_balance_old_span.textContent  = srcAccount.balance + transfer.amount;
+            this.src_account_balance_span.textContent      = srcAccount.balance;
+            this.transfer_amount_span.textContent          = transfer.amount;
+            this.transfer_reason_span.textContent          = transfer.reason;
+            this.dest_account_code_span.textContent        = destAccount.code;
+            this.dest_owner_id_span.textContent            = destAccount.user_id;
+            this.dest_account_balance_old_span.textContent = destAccount.balance - transfer.amount;
+            this.dest_account_balance_span.textContent     = destAccount.balance;
             //Setup visibility
             addressBook.showButton(destAccount.user_id, destAccount.code);
             this.show(true);
@@ -749,10 +757,6 @@
      *              memorized and used for autocomplete on transfer form
      *
      * Notes:
-     * - Multiple images for displaying contact adding outcome are used for
-     *   optimizing first loading. Setting them only in css, would have caused a late
-     *   loading when not already in cache.
-     * 
      * - the address book is stored as a "map" inside contacts variable. Actually, is parsed
      *   from json as an Object, with properties destIDs, each with an associated List of destAccounts.
      * 
@@ -766,9 +770,6 @@
      * @param {*} _destination_user_span      The destination user span html element
      * @param {*} _destination_account_span   The destination account span html element 
      * @param {*} _add_contact_warning_div    The add contact warning html element
-     * @param {*} _add_contact_status_loading The add contact status html element
-     * @param {*} _add_contact_status_ok      The add contact status ok html element
-     * @param {*} _add_contact_status_ko      The add contact status ko html element 
      * @param {*} _create_transfer_warning    The create transfer warning html element
      * @param {*} _dest_ids_datalist          The destination user ids datalist html element 
      * @param {*} _dest_accounts_datalist     The destination account datalist html element
@@ -796,10 +797,9 @@
 		// Adds an eventListener to the add_contact button
         this.add_contact.addEventListener("click", (e) => {
 	
-            e.target.style.display                        = "none";
-            self.add_contact_status_loading.style.display = "block";
+            e.target.style.display = "none";
 
-            var destUsrId = self.destination_user_span.textContent;
+            var destUsrId   = self.destination_user_span.textContent;
             var destAccCode = self.destination_account_span.textContent;
             self.addContact(destUsrId, destAccCode);
         });
@@ -835,13 +835,13 @@
         /**
          * Method of the class AddressBook that shows the addContact button
          */
-        this.showButton = function(destUserCode, destAccountCode){
+        this.showButton = function(destUserId, destAccountCode){
             
             self.add_contact_warning_div.style.display    = "none";
 
-            if (self.contacts[destUserCode]) {
+            if (self.contacts[destUserId]) {
 	
-                if (self.contacts[destUserCode].includes(destAccountCode)) {
+                if (self.contacts[destUserId].includes(destAccountCode)) {
 	
                     self.add_contact.style.display           = "none";
                     return;
@@ -854,13 +854,21 @@
 		/**
 		 * Method of the class AddressBook that adds the Contact with a POST
 		 */
-        this.addContact = function(destUserCode, destAccountCode) {
+        this.addContact = function(destUserId, destAccountCode) {
+            
+            // TODO: Error solved with a workaround
+            // this solution does not work: https://stackoverflow.com/questions/45156413/xmlhttprequest-formdata-not-submitting-data
+            // FormData created here does not work as expected -> once the form is sent the request received by the server is null
+            // [NOT WORKING CODE]:
             // Creates form data
-            var data = new FormData();
-            data.append("contactId", destUserCode);
-            data.append("contactAccountCode", destAccountCode);
+            // var data = new FormData();
+            // data.append("contactId", destUserId);
+            // data.append("contactAccountCode", destAccountCode);
             // Sends data
-            makeCall("POST", "AddContact", data, (req) => {
+            // makeCall("POST", "AddContact", form, (req) => {
+			// [END OF NOT WORKING CODE]
+			
+            makeCall("POST", "AddContact?contactId=" + destUserId + "&contactAccountCode=" + destAccountCode, null, (req) => {
 	
                 switch(req.status) {
 	

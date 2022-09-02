@@ -71,12 +71,12 @@ public class GoToHome extends HttpServlet {
 		User currentUser    = (User)session.getAttribute("currentUser");
 		
 		// Gets the accounts that belong to the user, if the operation is successful saves them in the request and then redirects
-		AccountDAO bankAccountDAO = new AccountDAO(connection);
+		AccountDAO accountDAO = new AccountDAO(connection);
 		List<Account> theirAccounts;
 		
 		try {
 			
-			theirAccounts = bankAccountDAO.findAccountsByUserId(currentUser.getId());
+			theirAccounts = accountDAO.findAccountsByUserId(currentUser.getId());
 			
 		} catch(SQLException e) {
 			

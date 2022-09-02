@@ -13,7 +13,7 @@
  * 
  * @param {*} loading_msg Alternative loading message to load
  */
-function LoadingModal(loading_msg){
+function LoadingModal(loading_msg) {
 	
     this.loading_msg = loading_msg;
     
@@ -26,7 +26,8 @@ function LoadingModal(loading_msg){
             document.body.className += " loading";
     	}
     };
-    this.update = function(message){
+    
+    this.update = function(message) {
 		// If a message is supplied to method
         if (message) {
         
@@ -65,13 +66,13 @@ var loadingModal = new LoadingModal(document.getElementById("loading_msg"));
     Array.from(forms).forEach(form => {
 	
         var input_fields = form.querySelectorAll('input:not([type="button"]):not([type="hidden"])');
-        var button = form.querySelector('input[type="button"]');
+        var button       = form.querySelector('input[type="button"]');
         
         Array.from(input_fields).forEach(input => {
 	
             input.addEventListener("keydown", (e) => {
 	
-                if(e.keyCode == 13){
+                if(e.keyCode == 13) {
 	
                     e.preventDefault();
                     let click = new Event("click");
@@ -123,7 +124,7 @@ function makeCall(method, relativeUrl, form, done_callback, reset = true) {
                     done_callback(req);
                 }
                 
-                setTimeout(function(){
+                setTimeout(function() {
 	
                     loadingModal.hide();
                 }, 500);
@@ -140,16 +141,17 @@ function makeCall(method, relativeUrl, form, done_callback, reset = true) {
 		// Sends empty if no form provided
         req.send(); 
         
-    } else if (form instanceof FormData){
+    //} else if (form instanceof FormData){
+		// TODO: error sending the form solved with a workaround. See bank.js
 		// Sends already serialized form
-        req.send(form); 
+        //req.send(form); 
         
     } else {
 		// Sends serialized form
         req.send(new FormData(form)); 
     }
     // Eventually resets form (if provided)
-    if (form !== null && !(form instanceof FormData) && reset === true) {
+    if (form !== null && /*!(form instanceof FormData) &&*/ reset === true) {
 		// Does not touch hidden fields, and restores default values if any
         form.reset(); 
     }
@@ -179,7 +181,7 @@ function makeCall(method, relativeUrl, form, done_callback, reset = true) {
  */
 function checkRedirect(requestURL, responseURL){
 	
-    if (responseURL){
+    if (responseURL) {
 	
         let actualRequestURL = relPathToAbs(requestURL);
         // If the Url changed

@@ -22,7 +22,7 @@
         // Does a form check
         if (form.checkValidity()) {
 	
-            sendToServer(form, login_warning_div, 'Login');
+            sendToServer(form, login_warning_div, 'Login', true);
             
         } else { 
             //If not valid, notifies
@@ -54,7 +54,7 @@
                 return;
 			}
             
-            sendToServer(form, register_warning_div, 'Register');
+            sendToServer(form, register_warning_div, 'Register', false);
         
         } else {
 	 		//If not valid, notifies
@@ -77,18 +77,30 @@
         }
     });
 
-    function sendToServer(form, error_div, request_url) {
+	var self = this;
+
+    function sendToServer(form, error_div, request_url, isLogin) {
 	
         makeCall("POST", request_url, form, function(req) {
 			// Gets status code
             switch(req.status) {
 	
                 case 200: // ok
-                    var data = JSON.parse(req.responseText);
-                    sessionStorage.setItem('id', data.id);
-                    sessionStorage.setItem('name', data.name);
-                    sessionStorage.setItem('username', data.username);
-                    window.location.href = "home.html";
+                                
+                    if (isLogin) {
+	
+						var data = JSON.parse(req.responseText);
+                    	sessionStorage.setItem('id', data.id);
+                    	sessionStorage.setItem('name', data.name);
+                    	sessionStorage.setItem('username', data.username);
+                    	window.location.href = "home.html";
+                    
+                    } else {
+						
+						var click = new Event("click");
+                        self.open_register_button.dispatchEvent(click);
+					}
+					
                     break;
                     
                 case 400: // bad request
