@@ -119,8 +119,8 @@ body{
     left: 1rem;
     top: 1rem;
 	min-width: 100px;  
-	background-color: #fafafa; 
-    border: solid 2px #7952b3; 
+	background-color: var(--creamy-white);
+    border: solid 2px var(--dark-gossamer);
     border-radius: 20px;
     text-align: center; 
     padding: 0.5rem;

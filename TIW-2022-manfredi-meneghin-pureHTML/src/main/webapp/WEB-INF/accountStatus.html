@@ -18,7 +18,7 @@
 	</div>
 
 	<div class="status-div">
-		<div class="create-div purple-div">
+		<div class="create-div gossamer-div">
 			<div class="create-title">Here you can create a new transfer</div>
 			<form class="status-form" method="POST" th:action="@{/MakeTransfer}">
 				<div class="form-group">
@@ -38,11 +38,11 @@
 					<input type="text" placeholder="Enter the reason" name="reason" required>
 				</div>
 				<input type="hidden" th:value="${account.code}" name="sourceAccountCode">
-				<button class="btn btn-large btn-purple" type="submit">Make transfer</button>
+				<button class="btn btn-large btn-gossamer" type="submit">Make transfer</button>
 			</form>
 		</div>
 
-		<div class="transfer-div purple-div">
+		<div class="transfer-div gossamer-div">
 			<div class="transfer-title">Here are your transfers</div>
 			<div th:switch="${transfers.size}">
 				<div th:case="0">

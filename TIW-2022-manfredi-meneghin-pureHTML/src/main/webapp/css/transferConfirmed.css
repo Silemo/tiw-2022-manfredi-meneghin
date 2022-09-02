@@ -7,14 +7,6 @@ body{
     margin-top: 1rem;
     text-align: center;
 }
-.transfer-confirmed-image{
-    padding: 0;
-    max-height: 40vh;
-    border-color: #28a745;
-    background-color: #28a745;
-    border-radius: 20px;
-    box-shadow: 0 1rem 3rem rgba(0,0,0,0.175);
-}
 .transfer-confirmed-title{
     font-size: 2rem;
     font-weight: 500;
@@ -33,10 +25,6 @@ body{
 .tranfer-source, .transfer, .tranfer-destination{
     width: 33%;
     text-align: center;
-}
-.transfer-image{
-    max-width: 150px;
-    max-height: 150px;
 }
 .title{
     font-size: 25px;

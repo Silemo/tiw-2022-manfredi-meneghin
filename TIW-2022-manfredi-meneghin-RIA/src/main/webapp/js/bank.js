@@ -147,7 +147,7 @@
 
 		/**
 		 * Method of the class UserInfo that shows the UserInfo 
-		 * binding them with their correspondig elements	
+		 * binding them with their corresponding elements
 		 */
         this.show = function(){
 	
@@ -349,7 +349,7 @@
 				
 				// Adds the "Open" button (to show the account details)
 				open_button             = document.createElement("a");
-				open_button.className   = "btn btn-purple btn-small btn-primary";
+				open_button.className   = "btn btn-gossamer btn-small btn-primary";
 				open_button.textContent = "Open";
 				open_button.setAttribute('data_accountCode', acc.code);
 				// Sets the event on click on the button

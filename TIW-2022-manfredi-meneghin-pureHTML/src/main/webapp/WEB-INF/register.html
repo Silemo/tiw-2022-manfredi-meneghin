@@ -7,7 +7,7 @@
 	<title>Register</title>
 </head>
 <body>
-	<div class="register-div purple-div">
+	<div class="register-div gossamer-div">
 		<div class="register-title">Insert data to create a new Account!</div>
 		<form class="register-form" method="POST" th:action="@{/Register}">
 			<div class="form-group">
@@ -34,7 +34,7 @@
 				<label for="password">Repeat Password</label>
 				<input type="password" placeholder="Re-enter your password" name="repeat_pwd" required>
 			</div>
-			<button class="btn btn-large btn-purple" type="submit">Register</button>
+			<button class="btn btn-large btn-gossamer" type="submit">Register</button>
 		</form>
 		<div class="warning-message" th:if="${warning}">
 			<span th:text="${warning}">Data not valid!</span>

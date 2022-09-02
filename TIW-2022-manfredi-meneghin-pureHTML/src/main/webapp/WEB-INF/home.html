@@ -14,17 +14,17 @@
 	<div class="home-subtitle">Nice to see you again!</div>
 	
 	<div class="home-div">
-		<div class="create-div purple-div">
+		<div class="create-div gossamer-div">
 			<div class="create-title">Here you can create a new account</div>
 			<form class="home-form" method="POST" th:action="@{/CreateAccount}">
-				<button class="btn btn-large btn-purple" type="submit">Create account</button>
+				<button class="btn btn-large btn-gossamer" type="submit">Create account</button>
 			</form>
 			<div class="warning-message" th:if="${warning}">
 				<span th:text="${warning}">Warning message</span>
 			</div>
 		</div>
 
-		<div class="account-div purple-div">
+		<div class="account-div gossamer-div">
 			<div class="account-title">Here there are your accounts</div>
 			<div th:remove="all-but-first">
 				<div class="card card-blue" th:each="account : ${accounts}" th:classappend="${accountStat.even} ? 'even'">
@@ -32,14 +32,14 @@
 						<div class="card-data">
 							<div><b>Balance: </b><span th:text="${account.balance}">55.00</span>&euro;</div>
 						</div>
-						<a class="btn btn-purple btn-small btn-primary" th:href="@{/GoToAccountStatus(accountCode=${account.code})}">Open</a>
+						<a class="btn btn-gossamer btn-small btn-primary" th:href="@{/GoToAccountStatus(accountCode=${account.code})}">Open</a>
 					</div>
 				<div class="card card-blue even">
 					<div class="card-title">Account code: 24</div>
 					<div class="card-data">
 						<div><b>Balance: </b><span>100254.00</span>&euro;</div>
 					</div>		
-					<a class="btn btn-purple btn-small btn-primary">Open</a>
+					<a class="btn btn-gossamer btn-small btn-primary">Open</a>
 				</div>
 				<div class="card card-blue">
 					<div class="card-title">Account code: 56</div>
@@ -47,7 +47,7 @@
 						<div><b>Code: </b><span>4434</span></div>
 						<div><b>Balance: </b><span>40000.00</span>&euro;</div>
 					</div>
-					<a class="btn btn-purple btn-small btn-primary">Open</a>
+					<a class="btn btn-gossamer btn-small btn-primary">Open</a>
 				</div>
 			</div>
 		</div>
