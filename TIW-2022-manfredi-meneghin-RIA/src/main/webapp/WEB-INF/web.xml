@@ -7,11 +7,11 @@
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>
-    <param-value>root</param-value>
+    <param-value>tiw_user</param-value>
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>geronimo23</param-value>
+    <param-value>tiw_password</param-value>
   </context-param>
   <context-param>
     <param-name>dbDriver</param-name>
