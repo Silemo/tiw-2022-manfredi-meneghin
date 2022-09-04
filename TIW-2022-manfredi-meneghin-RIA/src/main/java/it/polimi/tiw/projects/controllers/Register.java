@@ -144,7 +144,7 @@ public class Register extends HttpServlet {
 		}
 				
 		// Checks if the inserted strings (PASSWORD and REPEAT_PWD) are of the correct length (1-45) and equal
-		if (password.length() <= 0 || password.length() > 45 || !password.equals(repeat_pwd)) {
+		if (password.length() <= 0 || password.length() > 45) {
 			
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
 			response.getWriter().println("Chosen password invalid (a valid password has more than one character and less than 45)!");

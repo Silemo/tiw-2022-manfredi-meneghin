@@ -122,14 +122,14 @@ public class TransferDAO {
 			preparedStatementInsert.executeUpdate();
 
 			// Second operation - Removing the amount from the orderer's account
-			transactionUpdateSource = "UPDATE account SET balance = balance - ? WHERE code = ? ";
+			transactionUpdateSource       = "UPDATE account SET balance = balance - ? WHERE code = ? ";
 			preparedStatementUpdateSource = connection.prepareStatement(transactionUpdateSource);
 			preparedStatementUpdateSource.setBigDecimal(1,  amount);
 			preparedStatementUpdateSource.setInt(2, account_code_orderer);
 			preparedStatementUpdateSource.executeUpdate();
 
 			// Third and last operation - Adding the amount to the beneficiary's account
-			transactionUpdateDest   = "UPDATE account SET balance = balance + ? WHERE code = ? ";
+			transactionUpdateDest       = "UPDATE account SET balance = balance + ? WHERE code = ? ";
 			preparedStatementUpdateDest = connection.prepareStatement(transactionUpdateDest);
 			preparedStatementUpdateDest.setBigDecimal(1, amount);
 			preparedStatementUpdateDest.setInt(2, account_code_beneficiary);
