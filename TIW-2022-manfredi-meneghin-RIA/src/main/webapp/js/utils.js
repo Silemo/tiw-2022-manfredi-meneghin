@@ -252,3 +252,18 @@ Array.prototype.contains = function(element){
     
     return false;
 }
+
+/**
+ * isNaturalNumber function
+ * -----------------------------------------------------------------------------------------------------------
+ * Description: Verifies if the given number as input is a natural number or not. Returns true if so
+ *
+ * @param {*} n variable to check if it's a natural number or not
+ */
+ function isNaturalNumber(n) {
+	// force the value incase it is not
+    n = n.toString(); 
+    var n1 = Math.abs(n),
+        n2 = parseInt(n, 10);
+    return !isNaN(n1) && n2 === n1 && n1.toString() === n;
+}

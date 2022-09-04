@@ -4,15 +4,20 @@
 
 (function() {
     // Links html elements
-    var login_button          = document.getElementById("login_button");
-    var register_button       = document.getElementById("register_button");
-    var open_register_button  = document.getElementById("open_register_button");
-    var login_warning_div     = document.getElementById('login_warning_id');
-    var register_div          = document.getElementById("register-div");
-    var email_input           = register_button.closest("form").querySelector('input[name="email"]');
-    var password_input        = register_button.closest("form").querySelector('input[name="password"]');
-    var repeat_password_input = register_button.closest("form").querySelector('input[name="repeat_pwd"]');
-    var register_warning_div  = document.getElementById('register_warning_id');
+    var login_button                   = document.getElementById("login_button");
+    var login_email_input              = login_button.closest("form").querySelector('input[name="email"]');
+    var login_password_input           = login_button.closest("form").querySelector('input[name="password"]');
+    var login_warning_div              = document.getElementById('login_warning_id');
+    var open_register_button           = document.getElementById("open_register_button");
+    var register_div                   = document.getElementById("register-div");
+    var register_button                = document.getElementById("register_button");
+    var register_name_input            = register_button.closest("form").querySelector('input[name="name"]');
+    var register_surname_input         = register_button.closest("form").querySelector('input[name="surname"]');
+    var register_email_input           = register_button.closest("form").querySelector('input[name="email"]');
+    var register_username_input        = register_button.closest("form").querySelector('input[name="surname"]');
+    var register_password_input 	   = register_button.closest("form").querySelector('input[name="password"]');
+    var register_repeat_password_input = register_button.closest("form").querySelector('input[name="repeat_pwd"]');
+    var register_warning_div           = document.getElementById('register_warning_id');
 	
     // Attaches to login button
     login_button.addEventListener("click", (e) => {
@@ -21,7 +26,14 @@
         login_warning_div.style.display = 'none';
         // Does a form check
         if (form.checkValidity()) {
-	
+			// Checks if the login input fields are null
+			if (login_email_input.value == "" || login_password_input.value == "") {
+				
+				login_warning_div.textContent   = "One or more parameters are missing";
+				login_warning_div.style.display = 'block'; 
+				return;
+			}
+			
             sendToServer(form, login_warning_div, 'Login', true);
             
         } else { 
@@ -39,15 +51,24 @@
 		const emailRegEx = new RegExp("^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$");
         // Does a form check
         if (form.checkValidity()) { 
+            // Checks if the register input fields are null
+            if (register_name_input.value     == "" || register_surname_input.value  == "" || register_email_input.value           == "" || 
+                register_username_input.value == "" || register_password_input.value == "" || register_repeat_password_input.value == "") {
+	
+				register_warning_div.textContent   = "One or more parameters are missing";
+				register_warning_div.style.display = 'block'; 
+				return;
+			}
+            
             // Checks if repeat_pwd and password field are not equal. If so sets a warning
-            if (repeat_password_input.value != password_input.value) {
+            if (register_repeat_password_input.value != register_password_input.value) {
 	
                 register_warning_div.textContent   = "Passwords do not match";
                 register_warning_div.style.display = 'block';
                 return;
             }
             // Checks if the email is not valid. If so sets a warning
-            if (!emailRegEx.test(email_input.value)) {
+            if (!emailRegEx.test(register_email_input.value)) {
 				
 				register_warning_div.textContent   = "The email is not valid";
                 register_warning_div.style.display = 'block';

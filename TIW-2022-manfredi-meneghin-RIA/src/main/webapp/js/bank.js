@@ -437,6 +437,7 @@
         this.dest_input           = this.create_transfer_form.querySelector("input[name='destUserId']");
         this.account_input        = this.create_transfer_form.querySelector("input[name='destAccountCode']");
         this.amount_input         = this.create_transfer_form.querySelector("input[name='amount']");
+        this.reason_input         = this.create_transfer_form.querySelector("input[name='reason']")
         this.source_code          = this.create_transfer_form.querySelector("input[name='sourceAccountCode']");
         
         // Creates listener to the "show Tranfer" form button
@@ -455,15 +456,44 @@
         this.transfer_form_button.addEventListener("click", (e) => {
             // Verifies validity of the input
             if (this.create_transfer_form.checkValidity()) {
+				// Verifies if the transfer input fields are not null
+                if (this.dest_input.value == "" || this.account_input.value == "" || this.amount_input.value == "" || this.reason_input == "" || this.source_code == "") {
+					
+					this.create_transfer_form.reset();
+                    transferResult.showFailure("One or more parameters are missing");
+                    return;
+				}
+				// Verifies if the destinationUserId is a natural number
+				if (!isNaturalNumber(this.dest_input.value)){
+					
+					this.create_transfer_form.reset();
+                    transferResult.showFailure("The destinantion user id is not a natural number");
+                    return;
+				}
+				// Verifies if the destinationUserId is a natural number
+				if (!isNaturalNumber(this.account_input.value)){
+					
+					this.create_transfer_form.reset();
+                    transferResult.showFailure("The destinantion account code is not a natural number");
+                    return;
+				}
                 // Verifies if the transfer is from an account onto the same account
                 if (this.account_input.value == this.source_code.value) {
 	
                     this.create_transfer_form.reset();
                     transferResult.showFailure("Cannot make transfers on the same account");
                     return;
+                } 
+                // Verifies if the amount to transfer is greater than zero
+                if (Number(this.amount_input.value) <= 0) {
+					
+					this.create_transfer_form.reset();
+                    transferResult.showFailure("The amount to transfer is not greater than zero");
+                    return;
+				}
                 
                 // If the amount to transfer is higher than the account balance
-                } else if (Number(this.amount_input.value) > Number(this.account_balance_span.textContent)) {
+                if (Number(this.amount_input.value) > Number(this.account_balance_span.textContent)) {
 	
                     this.create_transfer_form.reset();
                     transferResult.showFailure("You don't have enough money on this account to make this transfer");
