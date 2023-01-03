@@ -3,8 +3,6 @@
 [![license: MIT][license-img]][license-link]
 ![latest commit](https://img.shields.io/github/last-commit/Silemo/tiw-2022-manfredi-meneghin)
 
-
-
 ## About
 
 Online Banking application is the final project of **"TIW-Informatic Technologies for the Web"**, course of **"Computer Science & Engineering"** held at Politecnico di Milano (2021/2022).
