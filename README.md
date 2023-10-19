@@ -5,7 +5,7 @@
 
 ## About
 
-Online Banking application is the final project of **"TIW-Informatic Technologies for the Web"**, course of **"Computer Science & Engineering"** held at Politecnico di Milano (2021/2022).
+Online Banking application is the final project of **TIW-Informatic Technologies for the Web**, course of **Computer Science & Engineering** held at Politecnico di Milano (2021/2022).
 
 **Professor** Piero Fraternali
 
@@ -13,7 +13,7 @@ Online Banking application is the final project of **"TIW-Informatic Technologie
 
 **Tutor** Nicolò Oreste Pinciroli
 
-<!Final Score:-->
+**Final Score** 30/30
 
 ### The Team
 
